@@ -158,5 +158,24 @@ do $$ begin
   assert (select count(*) from lancamentos where descricao = 'Tarifa bancária') = 1, 'desfazer apaga o lançamento criado pela conciliação';
 end $$;
 
+-- ------------------------------------------------ DRE / plano de contas ----
+do $$ begin
+  assert (select dre_linha from categorias where nome = 'Hotmart') = 'receita_bruta', 'Hotmart deveria cair em Receita bruta';
+  assert (select dre_linha from categorias where nome = 'Profissionais Externos') = 'pessoas', 'categoria do grupo Pessoas vai para a linha Pessoas';
+  assert (select dre_linha from categorias where nome = 'Taxas Bancárias') = 'financeiro', 'grupo Financeiro vai para Resultado financeiro';
+  assert (select dre_linha from categorias where nome = 'Distribuição de lucros') is null, 'distribuição de lucros fica fora do DRE';
+  assert (select count(*) from categorias where tipo <> 'neutra' and dre_linha is null) = 0, 'toda categoria de resultado precisa de uma linha do DRE';
+  -- saída entra negativa, entrada positiva; o mês de agosto tem só a venda Hotmart de 1.000
+  assert (select sum(realizado) from vw_dre where mes = '2026-08-01' and dre_linha = 'receita_bruta') = 1000, 'DRE deveria mostrar a receita de agosto';
+  begin
+    update categorias set dre_linha = 'ebitda' where nome = 'Programas';
+    assert false, 'categoria não pode ir para uma linha de total';
+  exception when raise_exception then null; end;
+  begin
+    insert into categorias (nome, tipo, dre_linha) values ('Neutra teste', 'neutra', 'outras');
+    assert false, 'categoria neutra não pode entrar no DRE';
+  exception when check_violation then null; end;
+end $$;
+
 reset role;
 \echo 'OK: todos os testes de banco passaram'

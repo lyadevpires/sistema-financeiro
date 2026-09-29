@@ -13,8 +13,17 @@ let semente = 42;
 const rnd = () => (semente = (semente * 16807) % 2147483647) / 2147483647;
 const varia = (v, p = 0.12) => Math.round(v * (1 + (rnd() * 2 - 1) * p) * 100) / 100;
 
+const dreLinhas = [
+  ['receita_bruta', 'Receita bruta', 10], ['deducoes', 'Deduções: impostos, taxas e reembolsos', 20], ['receita_liquida', 'Receita líquida', 25, true],
+  ['marketing', 'Marketing e aquisição', 30], ['entrega', 'Entrega: eventos e mentorias', 40], ['margem', 'Margem de contribuição', 45, true],
+  ['pessoas', 'Pessoas', 50], ['operacao', 'Tecnologia, estrutura e serviços', 60], ['ebitda', 'EBITDA', 65, true],
+  ['financeiro', 'Resultado financeiro', 70], ['outras', 'Outras receitas e despesas', 80], ['resultado_antes', 'Resultado antes do IR', 85, true],
+  ['ir_csll', 'IRPJ e CSLL', 90], ['lucro_liquido', 'Lucro líquido', 95, true],
+].map(([codigo, nome, ordem, subtotal = false]) => ({ codigo, nome, ordem, subtotal }));
+const linhaPorGrupo = { 'Produtos':'receita_bruta', 'Receitas':'receita_bruta', 'Impostos':'deducoes', 'Marketing e aquisição':'marketing', 'Eventos':'entrega',
+  'Pessoas':'pessoas', 'Tecnologia e sistemas':'operacao', 'Estrutura e escritório':'operacao', 'Serviços profissionais':'operacao', 'Financeiro':'financeiro' };
 const categorias = [
-  ['Vendas plataforma', 'receita', 'Receitas'], ['Mentorias', 'receita', 'Receitas'], ['Patrocínios', 'receita', 'Receitas'],
+  ['FLUXO', 'receita', 'Produtos'], ['MASTERFLUXO', 'receita', 'Produtos'], ['Mentorias', 'receita', 'Receitas'], ['Patrocínios', 'receita', 'Receitas'],
   ['Rendimentos', 'receita', 'Financeiro'],
   ['Anúncios redes sociais', 'despesa', 'Marketing e aquisição'], ['Anúncios busca', 'despesa', 'Marketing e aquisição'],
   ['Prestadores PJ', 'despesa', 'Pessoas'], ['Salários', 'despesa', 'Pessoas'], ['Pró-labore', 'despesa', 'Pessoas'], ['Benefícios', 'despesa', 'Pessoas'],
@@ -22,7 +31,8 @@ const categorias = [
   ['Local de eventos', 'despesa', 'Eventos'], ['Alimentação eventos', 'despesa', 'Eventos'],
   ['Sistemas e cloud', 'despesa', 'Tecnologia e sistemas'], ['Aluguel', 'despesa', 'Estrutura e escritório'], ['Contabilidade', 'despesa', 'Serviços profissionais'],
   ['Tarifas bancárias', 'despesa', 'Financeiro'], ['Transferência', 'neutra', 'Movimentações (fora do resultado)'],
-].map(([nome, tipo, grupo]) => ({ id: id(), nome, tipo, grupo, ativo: true }));
+].map(([nome, tipo, grupo]) => ({ id: id(), nome, tipo, grupo, ativo: true,
+  dre_linha: tipo === 'neutra' ? null : nome === 'IRPJ e CSLL' ? 'ir_csll' : linhaPorGrupo[grupo] || 'outras' }));
 const cat = n => categorias.find(c => c.nome === n);
 const contas = [
   { id: id(), nome: 'Banco Azul', tipo: 'corrente', saldo_inicial: 1800000, data_saldo_inicial: iso(mesesAtras(9)), ativo: true },
@@ -46,7 +56,8 @@ const add = (tipo, descricao, valor, catNome, dia, m, extra = {}) => {
 };
 for (let m = 9; m >= -3; m--) {
   const cresc = 1 + (9 - m) * 0.06;
-  [5, 12, 19, 26].forEach(d => add('receber', 'Repasse plataforma de vendas', varia(620000 * cresc, .25), 'Vendas plataforma', d, m, { fornecedor: 'Plataforma de Vendas' }));
+  [5, 12, 19, 26].forEach(d => add('receber', 'Repasse plataforma - FLUXO', varia(430000 * cresc, .25), 'FLUXO', d, m, { fornecedor: 'Plataforma de Vendas' }));
+  [12, 26].forEach(d => add('receber', 'Repasse plataforma - MASTERFLUXO', varia(380000 * cresc, .3), 'MASTERFLUXO', d, m, { fornecedor: 'Plataforma de Vendas' }));
   add('receber', 'Mentoria em grupo', varia(210000, .3), 'Mentorias', 10, m);
   if (m % 3 === 0) add('receber', 'Patrocínio de evento', varia(60000), 'Patrocínios', 15, m);
   add('receber', 'Rendimento aplicação', varia(4200), 'Rendimentos', 22, m);
@@ -86,6 +97,15 @@ function vwResultado(){
   });
   return Object.values(o);
 }
+function vwDre(){
+  const o = {};
+  lancamentos.filter(l => l.categoria_tipo !== 'neutra').forEach(l => {
+    const c = categorias.find(x => x.id === l.categoria_id), k = [l.data_competencia, c.nome].join('|');
+    o[k] ??= { mes: l.data_competencia, dre_linha: c.dre_linha, ordem: dreLinhas.find(d => d.codigo === c.dre_linha)?.ordem, grupo: c.grupo, categoria: c.nome, realizado: 0, previsto: 0 };
+    o[k][l.status === 'pago' ? 'realizado' : 'previsto'] += (l.tipo === 'receber' ? 1 : -1) * l.valor;
+  });
+  return Object.values(o);
+}
 const vwSaldo = () => contas.map(c => ({ ...c, pendentes: 0, saldo_extrato: null, data_extrato: null,
   saldo_atual: c.tipo === 'cartao' ? 0 : c.saldo_inicial + lancamentos.filter(l => l.conta_id === c.id && l.status === 'pago').reduce((a, l) => a + (l.tipo === 'receber' ? 1 : -1) * l.valor, 0) }));
 
@@ -95,6 +115,7 @@ const tabelas = {
   categorias: () => categorias, centros_custo: () => centros, contas_bancarias: () => contas, fornecedores: () => fornecedores,
   projetos: () => [], regras_classificacao: () => [], notas_fiscais: () => [], extrato_linhas: () => [], extrato_importacoes: () => [], anexos: () => [], faturas: () => [],
   recorrencias: () => [], auditoria: () => [], lancamentos: () => lancamentos,
+  dre_linhas: () => dreLinhas, vw_dre: vwDre,
   vw_lancamentos: () => lancamentos, vw_fluxo_mensal: vwFluxo, vw_resultado_categoria: vwResultado, vw_saldo_contas: vwSaldo,
   vw_faturas: () => [], vw_extrato: () => [], vw_projetos: () => [], vw_custo_pessoas: () => [],
 };

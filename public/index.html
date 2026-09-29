@@ -139,6 +139,24 @@ tfoot td{font-weight:800;border-top:2px solid var(--brand);background:var(--bran
 .auth input{width:100%}
 .steps{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
 .steps span.on{color:var(--ink);font-weight:600}
+.dre2 td{padding:10px 18px;border-bottom:0;border-top:1px solid var(--line)}
+.dre2 thead td{background:var(--brand);color:var(--brand-ink);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;border:0;padding:10px 18px;white-space:nowrap}
+.dre2 td.v{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.dre2 td.p{text-align:right;color:var(--ink-3);font-size:12.5px;white-space:nowrap}
+.dre2 thead td.p,.dre2 thead td.v{color:var(--brand-ink)}
+.dre2 td.b{width:150px}
+.dre2 td:first-child{white-space:nowrap}
+.dre2 tr.line td:first-child .s{display:inline-block;width:26px;color:var(--ink-3);font-size:12px}
+.dre2 tr.sub td{padding:6px 18px 6px 48px;font-size:13px;color:var(--ink-2);border-top:0;background:var(--surface-2)}
+.dre2 tr.sub td.v,.dre2 tr.sub td.p{color:var(--ink-3)}
+.dre2 tr.total td{background:var(--brand-band);font-weight:700;border-top:1px solid var(--line-2)}
+.dre2 tr.total td:first-child{font-family:var(--head);font-weight:800;color:var(--brand)}
+.dre2 tr.final td{background:var(--brand);color:var(--brand-ink);font-weight:800;border:0}
+.dre2 tr.final td:first-child{font-family:var(--head);font-size:15.5px}
+.dre2 tr.final td.p,.dre2 tr.final .small{color:var(--brand-ink)}
+.dre2 tr.toggle{cursor:pointer} .dre2 tr.toggle:hover td{background:var(--surface-2)}
+.dre2 .chev{display:inline-block;margin-left:6px;font-size:10px;color:var(--ink-3);transition:transform .15s}
+.dre2 tr.open .chev{transform:rotate(90deg)}
 .dre td:first-child{white-space:nowrap} .dre tr.grp td{background:var(--brand-band);font-weight:700}
 .dre tr.tot td{font-weight:800;border-top:2px solid var(--brand);background:var(--brand-band)}
 .chart svg{width:100%;height:auto;display:block}
@@ -291,7 +309,9 @@ async function loadLookups(){
     q(sb.from('projetos').select('*').order('nome')),
     q(sb.from('regras_classificacao').select('*').order('padrao')),
   ]);
-  Object.assign(S.lk, { categorias:cat, centros:cc, contas:ct, fornecedores:fo, projetos:pr, regras:rg });
+  // linhas do DRE (migration do plano de contas); sem ela, o app segue funcionando com a lista vazia
+  const dl = await q(sb.from('dre_linhas').select('*').order('ordem')).catch(() => []);
+  Object.assign(S.lk, { categorias:cat, centros:cc, contas:ct, fornecedores:fo, projetos:pr, regras:rg, dreLinhas:dl });
 }
 const opts = (list, filter=()=>true) => list.filter(filter).map(x => ({ value:x.id, label:x.nome + (x.ativo === false ? ' (inativo)' : '') }));
 
@@ -522,6 +542,7 @@ const ICONES = {
   cartoes:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>',
   recorrencias:'<path d="M4 12a8 8 0 0114-5M20 12a8 8 0 01-14 5M18 3v4h-4M6 21v-4h4"/>',
   cadastros:'<path d="M4 6h16M4 12h16M4 18h10"/>',
+  plano:'<path d="M4 5h6M4 12h6M4 19h6M14 5h6M16 12h4M16 19h4M10 5v14"/>',
   exportar:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
   usuarios:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/>',
   parametros:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
@@ -542,6 +563,7 @@ const ROTAS = [
   { id:'cartoes', label:'Cartões de crédito', fn:viewCartoes },
   { id:'recorrencias', label:'Contas fixas', fn:viewRecorrencias },
   { sec:'Configuração' },
+  { id:'plano', label:'Plano de contas', fn:() => { store.set('fin_cad', { ...(store.get('fin_cad') || {}), aba:'categorias', busca:'' }); return viewCadastros(); } },
   { id:'cadastros', label:'Cadastros', fn:viewCadastros },
   { id:'exportar', label:'Exportar planilha', fn:viewExportar },
   { id:'usuarios', label:'Usuários', fn:viewUsuarios, admin:true },
@@ -615,10 +637,11 @@ async function viewPainel(){
   const mes = st.mes && st.mes <= monthKey() ? st.mes : monthKey(), ini = firstDay(mes), ant = firstDay(addMonths(mes, -1));
   const aba = st.aba || 'geral';
   const hoje = today();
-  const [fluxo, saldos, res] = await Promise.all([
+  const [fluxo, saldos, res, dreMes] = await Promise.all([
     q(sb.from('vw_fluxo_mensal').select('*').gte('mes', firstDay(addMonths(mes, -11))).lte('mes', firstDay(addMonths(mes, 3))).order('mes')),
     q(sb.from('vw_saldo_contas').select('*')),
     q(sb.from('vw_resultado_categoria').select('tipo,grupo,categoria,mes,realizado').in('mes', [ini, ant]).limit(5000)),
+    (S.lk.dreLinhas || []).length ? q(sb.from('vw_dre').select('*').eq('mes', ini).limit(5000)).catch(() => []) : [],
   ]);
   const fm = fluxo.find(x => x.mes === ini) || {}, fa = fluxo.find(x => x.mes === ant) || {};
   const ent = +fm.receitas_realizadas || 0, sai = +fm.despesas_realizadas || 0, entA = +fa.receitas_realizadas || 0, saiA = +fa.despesas_realizadas || 0;
@@ -662,7 +685,7 @@ async function viewPainel(){
     resultado: () => html`
       <div class="grid2">
         <div class="card"><div class="band"><h2>Das entradas ao resultado</h2><span class="muted">${brMonth(ini)} · competência</span></div>
-          <div class="chart-wrap">${cascata(resMes)}</div></div>
+          <div class="chart-wrap">${cascata(resMes, dreMes, ini)}</div></div>
         <div class="card"><div class="band"><h2>Para onde foi o dinheiro</h2><span class="muted">saídas de ${brMonth(ini)}</span></div>
           ${saidasGrupo.length ? donut(saidasGrupo, ['--neg', '--terra', '--sand', '--sage', '--sage-2', '--neg-2', '--pos-2', '--brand-2', '--line-2']) : html`<div class="empty">Nenhuma saída paga neste mês.</div>`}</div>
       </div>
@@ -722,15 +745,31 @@ function chartEntSai(rows, atual){
   return raw(s + '</svg>');
 }
 
-// cascata por competência: entradas → cada grupo de despesa → resultado
-function cascata(resMes){
+// cascata por competência. Com o plano de contas: receita bruta → cada linha do DRE → lucro líquido.
+// Sem ele (banco antigo): entradas → cada grupo de despesa → resultado.
+function cascata(resMes, dreRows, mes){
+  let passos;
+  if ((S.lk.dreLinhas || []).length && dreRows?.length) {
+    const dre = montaDre(dreRows, [mes], false), m = mes;
+    const rb = dre.find(l => l.codigo === 'receita_bruta')?.valores[m] || 0;
+    if (!rb) return html`<div class="empty">Sem receita com competência neste mês.</div>`;
+    const final = [...dre].reverse().find(l => l.subtotal);
+    passos = [['Receita bruta', rb, 'ini'], ...dre.filter(l => !l.subtotal && l.codigo !== 'receita_bruta' && Math.abs(l.valores[m]) >= 0.005).map(l => [l.nome.replace(/:.*$/, ''), l.valores[m]]), [final.nome, final.valores[m], 'fim']];
+    return desenhaCascata(passos);
+  }
   const ent = resMes.filter(r => r.tipo === 'receber').reduce((a, r) => a + Number(r.realizado || 0), 0);
   if (!ent) return html`<div class="empty">Sem receitas com competência neste mês.</div>`;
   const grupos = somaPor(resMes.filter(r => r.tipo === 'pagar'), 'grupo');
   const lista = grupos.length > 6 ? [...grupos.slice(0, 5), ['Outros', grupos.slice(5).reduce((a, x) => a + x[1], 0)]] : grupos;
-  const passos = [['Receitas', ent, 'ini'], ...lista.map(([g, v]) => [g, -v]), ['Resultado', ent - grupos.reduce((a, x) => a + x[1], 0), 'fim']];
+  passos = [['Receitas', ent, 'ini'], ...lista.map(([g, v]) => [g, -v]), ['Resultado', ent - grupos.reduce((a, x) => a + x[1], 0), 'fim']];
+  return desenhaCascata(passos);
+}
+function desenhaCascata(passos){
+  const ent = passos[0][1];
   const W = 760, L = 10, T = 22, B = 236, bw = Math.min(64, (W - 2 * L) / passos.length * .62), gap = (W - 2 * L - bw * passos.length) / (passos.length - 1);
-  const topo = Math.max(ent, 1), base = Math.min(0, passos[passos.length - 1][1]);
+  // topo e base consideram o caminho inteiro (uma linha positiva no meio pode passar da receita)
+  let run = 0, topo = 1, base = 0;
+  passos.forEach(([, v, k]) => { run = k === 'ini' || k === 'fim' ? v : run + v; topo = Math.max(topo, run); base = Math.min(base, run); });
   const y = v => T + (topo - v) / (topo - base) * (B - T);
   let acc = 0, s = `<svg viewBox="0 0 ${W} ${B + 44}" role="img" aria-label="Das entradas ao resultado">`;
   s += `<line x1="${L}" x2="${W - L}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line-2)"/>`;
@@ -738,10 +777,10 @@ function cascata(resMes){
     const x = L + i * (bw + gap); let y0, y1, cor;
     if (k === 'ini') { y0 = y(v); y1 = y(0); acc = v; cor = '--pos'; }
     else if (k === 'fim') { y0 = y(Math.max(v, 0)); y1 = y(Math.min(v, 0)); cor = v >= 0 ? '--brand' : '--neg'; }
-    else { const a = acc; acc += v; y0 = y(Math.max(a, acc)); y1 = y(Math.min(a, acc)); cor = '--neg'; }
+    else { const a = acc; acc += v; y0 = y(Math.max(a, acc)); y1 = y(Math.min(a, acc)); cor = v < 0 ? '--neg' : '--ok'; }
     s += `<rect x="${x}" y="${y0}" width="${bw}" height="${Math.max(2, y1 - y0)}" rx="5" fill="var(${cor})" opacity="${k ? 1 : .85}"><title>${esc(n)}: ${esc(money(v))}</title></rect>`;
     const c = fmtCompacto(v);
-    s += `<text x="${x + bw / 2}" y="${y0 - 7}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(${k ? '--ink' : '--neg'})">${esc(c.n.replace('R$ ', ''))}${c.u ? ' ' + c.u : ''}</text>`;
+    s += `<text x="${x + bw / 2}" y="${y0 - 7}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(${k ? '--ink' : v < 0 ? '--neg' : '--ok'})">${esc(c.n.replace('R$ ', ''))}${c.u ? ' ' + c.u : ''}</text>`;
     const partes = String(n).length > 12 ? [String(n).slice(0, String(n).lastIndexOf(' ', 12) > 0 ? String(n).lastIndexOf(' ', 12) : 12), String(n).slice((String(n).lastIndexOf(' ', 12) > 0 ? String(n).lastIndexOf(' ', 12) : 12)).trim()] : [n];
     partes.forEach((p, j) => s += `<text x="${x + bw / 2}" y="${B + 18 + j * 13}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${esc(p.length > 14 ? p.slice(0, 13) + '…' : p)}</text>`);
   });
@@ -1076,47 +1115,89 @@ async function viewRecorrencias(){
 }
 
 // ----------------------------------------------------------- RELATÓRIOS ----
+// Monta o DRE em cascata a partir de vw_dre: linhas na ordem de dre_linhas; subtotal = soma acumulada das linhas acima.
+// rows: [{mes, dre_linha, grupo, categoria, realizado, previsto}], meses: ['AAAA-MM-01', ...]
+function montaDre(rows, meses, comPrevisto){
+  const linhas = (S.lk.dreLinhas || []).length ? S.lk.dreLinhas : [{ codigo:'outras', nome:'Resultado', ordem:80, subtotal:false }];
+  const v = r => Number(r.realizado || 0) + (comPrevisto ? Number(r.previsto || 0) : 0);
+  const acc = Object.fromEntries(meses.map(m => [m, 0]));
+  return linhas.map(l => {
+    if (l.subtotal) return { ...l, valores: { ...acc } };
+    const rs = rows.filter(r => r.dre_linha === l.codigo);
+    const valores = Object.fromEntries(meses.map(m => [m, rs.filter(r => r.mes === m).reduce((a, r) => a + v(r), 0)]));
+    meses.forEach(m => acc[m] += valores[m]);
+    const cats = {};
+    rs.forEach(r => { const k = r.categoria; cats[k] ??= { nome: k, grupo: r.grupo, valores: Object.fromEntries(meses.map(m => [m, 0])) }; if (r.mes in cats[k].valores) cats[k].valores[r.mes] += v(r); });
+    const total = o => meses.reduce((a, m) => a + o.valores[m], 0);
+    return { ...l, valores, categorias: Object.values(cats).filter(c => meses.some(m => c.valores[m])).sort((a, b) => Math.abs(total(b)) - Math.abs(total(a))) };
+  });
+}
+const valDre = v => Math.abs(v) < 0.005 ? '—' : v < 0 ? `(${BRL.format(-v).replace('R$', '').trim()})` : BRL.format(v).replace('R$', '').trim();
+
 async function viewRelatorios(){
-  const st = store.get('fin_filtro_dre') || { de: addMonths(monthKey(), -5), ate: monthKey(), por:'categoria', prev:false };
+  const ultimoFechado = addMonths(monthKey(), -1);
+  const st = { modo:'mes', mes: ultimoFechado, de: addMonths(ultimoFechado, -5), ate: ultimoFechado, prev:false, ...(store.get('fin_dre') || {}) };
   const render = async () => {
-    store.set('fin_filtro_dre', st);
-    const rows = await q(sb.from('vw_resultado_categoria').select('*').gte('mes', firstDay(st.de)).lte('mes', firstDay(st.ate)).limit(20000));
-    const meses = []; for (let m = st.de; m <= st.ate && meses.length < 24; m = addMonths(m, 1)) meses.push(firstDay(m));
-    const v = r => Number(r.realizado || 0) + (st.prev ? Number(r.previsto || 0) : 0);
-    const chave = r => st.por === 'categoria' ? r.categoria : r.centro_custo;
-    const grupoDe = r => st.por === 'categoria' ? r.grupo : (r.tipo === 'receber' ? 'Receitas' : 'Despesas');
-    const bloco = tipo => {
-      const rs = rows.filter(r => r.tipo === tipo);
-      const grupos = {};
-      rs.forEach(r => { const g = grupoDe(r), k = chave(r); grupos[g] ??= {}; grupos[g][k] ??= {}; grupos[g][k][r.mes] = (grupos[g][k][r.mes] || 0) + v(r); });
-      const totMes = m => rs.filter(r => r.mes === m).reduce((a,r) => a + v(r), 0);
-      return { grupos, totMes };
-    };
-    const rec = bloco('receber'), desp = bloco('pagar');
-    const linhaVals = obj => meses.map(m => html`<td class="r num small">${obj[m] ? money(obj[m]) : ''}</td>`);
-    const total = obj => meses.reduce((a,m) => a + (obj[m] || 0), 0);
-    const renderBloco = (b, nome, sinal) => html`<tr class="grp"><td>${nome}</td>${meses.map(m => html`<td class="r num">${money(b.totMes(m))}</td>`)}<td class="r num">${money(meses.reduce((a,m) => a + b.totMes(m), 0))}</td></tr>
-      ${Object.entries(b.grupos).sort((a,b2) => a[0].localeCompare(b2[0])).map(([g, itens]) => html`
-        ${st.por === 'categoria' ? html`<tr><td style="padding-left:16px;font-weight:500">${g}</td>${meses.map(m => html`<td class="r num small">${money(Object.values(itens).reduce((a,o) => a + (o[m] || 0), 0))}</td>`)}<td class="r num small">${money(Object.values(itens).reduce((a,o) => a + total(o), 0))}</td></tr>` : ''}
-        ${Object.entries(itens).sort((a,b2) => total(b2[1]) - total(a[1])).map(([k, o]) => html`<tr><td class="small muted" style="padding-left:${st.por === 'categoria' ? 32 : 16}px">${k}</td>${linhaVals(o)}<td class="r num small">${money(total(o))}</td></tr>`)}`)}`;
-    const res = m => rec.totMes(m) - desp.totMes(m);
-    view().innerHTML = html`<div class="head"><div><h1>Relatórios</h1><p>DRE gerencial por competência. Transferências e aportes ficam fora.</p></div>
-      <div class="row"><input type="month" id="rde" value="${st.de}"> até <input type="month" id="rate" value="${st.ate}">
-        <select id="rpor"><option value="categoria"${st.por === 'categoria' ? raw(' selected') : ''}>Por categoria</option><option value="centro"${st.por === 'centro' ? raw(' selected') : ''}>Por centro de custo</option></select>
+    store.set('fin_dre', st);
+    const mesesCols = [];
+    if (st.modo === 'mes') mesesCols.push(firstDay(st.mes));
+    else for (let m = st.de; m <= st.ate && mesesCols.length < 24; m = addMonths(m, 1)) mesesCols.push(firstDay(m));
+    const ant = firstDay(addMonths(st.mes, -1)), busca = st.modo === 'mes' ? [ant, ...mesesCols] : mesesCols;
+    const rows = await q(sb.from('vw_dre').select('*').gte('mes', busca[0]).lte('mes', busca[busca.length - 1]).limit(20000));
+    const dre = montaDre(rows, busca, st.prev);
+    const rb = m => dre.find(l => l.codigo === 'receita_bruta')?.valores[m] || 0;
+    const tot = o => mesesCols.reduce((a, m) => a + o.valores[m], 0);
+    const rbTot = mesesCols.reduce((a, m) => a + rb(m), 0);
+    const semLinhas = !(S.lk.dreLinhas || []).length;
+    const ultimaTotal = [...dre].reverse().find(l => l.subtotal)?.codigo;
+
+    let corpo = '';
+    if (st.modo === 'mes') {
+      const m = mesesCols[0];
+      const varia = (a, b) => { if (!b || Math.abs(a - b) < 0.005) return ''; const d = (a - b) / Math.abs(b); return html`<span class="small ${d > 0 ? 'pos' : 'neg'}">${d > 0 ? '▲' : '▼'} ${pct(Math.abs(d))}</span>`; };
+      dre.forEach((l, i) => {
+        const v = l.valores[m], va = l.valores[ant];
+        if (l.subtotal) { corpo += html`<tr class="${l.codigo === ultimaTotal ? 'final' : 'total'}"><td>= ${l.nome}</td><td class="b"></td><td class="v">${valDre(v)}</td><td class="p">${rb(m) ? pct(v / rb(m)) : ''}</td><td class="v small">${valDre(va)}</td><td class="p">${varia(v, va)}</td></tr>`.s; return; }
+        const w = rb(m) ? Math.min(100, Math.abs(v) / rb(m) * 100) : 0;
+        corpo += html`<tr class="line toggle" data-i="${i}"><td><span class="s">${l.codigo === 'receita_bruta' ? '' : v >= 0 ? '(+)' : '(−)'}</span>${l.nome}${l.categorias.length ? html`<span class="chev">▶</span>` : ''}</td>
+          <td class="b"><div class="mbar"><i style="width:${w}%;background:var(${v >= 0 ? '--pos' : '--neg'})"></i></div></td>
+          <td class="v ${v < 0 ? 'neg' : v > 0 ? 'pos' : ''}">${valDre(v)}</td><td class="p">${rb(m) ? pct(v / rb(m)) : ''}</td><td class="v small muted">${valDre(va)}</td><td class="p">${varia(v, va)}</td></tr>`.s;
+        l.categorias.forEach(c => corpo += html`<tr class="sub" data-p="${i}" hidden><td>${c.nome}<span class="small muted"> · ${c.grupo}</span></td><td class="b"></td><td class="v">${valDre(c.valores[m])}</td><td class="p">${rb(m) ? pct(c.valores[m] / rb(m)) : ''}</td><td class="v small">${valDre(c.valores[ant])}</td><td class="p"></td></tr>`.s);
+      });
+      corpo = html`<thead><tr><td>${MESES[+m.slice(5, 7) - 1]}/${m.slice(0, 4)} · R$</td><td class="b"></td><td class="v">Valor</td><td class="p">% receita</td><td class="v">${brMonth(ant)}</td><td class="p">Variação</td></tr></thead><tbody>${raw(corpo)}</tbody>`.s;
+    } else {
+      dre.forEach((l, i) => {
+        const cls = l.subtotal ? (l.codigo === ultimaTotal ? 'final' : 'total') : 'line toggle';
+        corpo += html`<tr class="${cls}" data-i="${i}"><td>${l.subtotal ? '= ' : ''}${l.nome}${!l.subtotal && l.categorias.length ? html`<span class="chev">▶</span>` : ''}</td>${mesesCols.map(m => html`<td class="v ${!l.subtotal && l.valores[m] < 0 ? 'neg' : ''}">${valDre(l.valores[m])}</td>`)}<td class="v"><b>${valDre(tot(l))}</b></td><td class="p">${rbTot ? pct(tot(l) / rbTot) : ''}</td></tr>`.s;
+        if (!l.subtotal) l.categorias.forEach(c => corpo += html`<tr class="sub" data-p="${i}" hidden><td>${c.nome}</td>${mesesCols.map(m => html`<td class="v">${valDre(c.valores[m])}</td>`)}<td class="v">${valDre(tot(c))}</td><td class="p"></td></tr>`.s);
+      });
+      corpo = html`<thead><tr><td>R$</td>${mesesCols.map(m => html`<td class="v">${brMonth(m)}</td>`)}<td class="v">Total</td><td class="p">% receita</td></tr></thead><tbody>${raw(corpo)}</tbody>`.s;
+    }
+
+    view().innerHTML = html`<div class="head"><div><div class="eyebrow">Demonstrativo do resultado · regime de competência</div><h1>DRE gerencial</h1>
+        <p>Pelo mês de competência. Transferências, aplicações, aportes e distribuição de lucros ficam fora. Clique numa linha para ver as categorias.</p></div>
+      <div class="row"><div class="tabs" style="margin:0;border:0">${[['mes', 'Um mês'], ['meses', 'Mês a mês']].map(([k, t]) => html`<button data-modo="${k}" class="${st.modo === k ? 'on' : ''}">${t}</button>`)}</div>
+        ${st.modo === 'mes' ? html`<input type="month" id="rmes" value="${st.mes}">` : html`<input type="month" id="rde" value="${st.de}"> até <input type="month" id="rate" value="${st.ate}">`}
         <label class="row small"><input type="checkbox" id="rprev"${st.prev ? raw(' checked') : ''}> incluir previsto</label>
         <button class="btn" id="rcsv">Baixar CSV</button></div></div>
-      <div class="card"><div class="tbl-wrap"><table class="dre"><thead><tr><th></th>${meses.map(m => html`<th class="r">${brMonth(m)}</th>`)}<th class="r">Total</th></tr></thead><tbody>
-        ${renderBloco(rec, 'Receitas', 1)}${renderBloco(desp, 'Despesas', -1)}
-        <tr class="tot"><td>Resultado</td>${meses.map(m => html`<td class="r num ${res(m) < 0 ? 'neg' : 'pos'}">${money(res(m))}</td>`)}<td class="r num">${money(meses.reduce((a,m) => a + res(m), 0))}</td></tr>
-      </tbody></table></div></div>`.s;
-    $('#rde').onchange = e => { st.de = e.target.value; render(); };
-    $('#rate').onchange = e => { st.ate = e.target.value; render(); };
-    $('#rpor').onchange = e => { st.por = e.target.value; render(); };
+      ${semLinhas ? html`<div class="note" style="margin-bottom:14px">O plano de contas ainda não foi aplicado no banco: o DRE aparece sem as linhas da cascata.</div>` : ''}
+      <div class="card" style="overflow:hidden"><div class="tbl-wrap"><table class="dre2">${raw(corpo)}</table></div></div>
+      <p class="small muted">Para mudar a linha de uma categoria: <a href="#/plano">Plano de contas</a>.</p>`.s;
+
+    $$('.dre2 tr.toggle').forEach(tr => tr.onclick = () => { tr.classList.toggle('open'); $$(`.dre2 tr[data-p="${tr.dataset.i}"]`).forEach(s => s.hidden = !s.hidden); });
+    $$('[data-modo]').forEach(b => b.onclick = () => { st.modo = b.dataset.modo; render(); });
+    $('#rmes')?.addEventListener('change', e => { if (e.target.value) { st.mes = e.target.value; render(); } });
+    $('#rde')?.addEventListener('change', e => { if (e.target.value) { st.de = e.target.value; render(); } });
+    $('#rate')?.addEventListener('change', e => { if (e.target.value) { st.ate = e.target.value; render(); } });
     $('#rprev').onchange = e => { st.prev = e.target.checked; render(); };
     $('#rcsv').onclick = () => {
-      const linhas = [['Tipo','Grupo', st.por === 'categoria' ? 'Categoria' : 'Centro de custo', ...meses.map(brMonth), 'Total']];
-      [['Receitas', rec], ['Despesas', desp]].forEach(([t, b]) => Object.entries(b.grupos).forEach(([g, itens]) => Object.entries(itens).forEach(([k, o]) => linhas.push([t, g, k, ...meses.map(m => (o[m] || 0).toFixed(2).replace('.',',')), total(o).toFixed(2).replace('.',',')]))));
-      baixar(`dre-${st.de}-a-${st.ate}.csv`, linhas.map(l => l.map(csvCell).join(';')).join('\r\n'));
+      const num = v => v.toFixed(2).replace('.', ',');
+      const linhas = [['Linha do DRE', 'Grupo', 'Categoria', ...mesesCols.map(brMonth), 'Total']];
+      dre.forEach(l => {
+        linhas.push([l.nome, '', '', ...mesesCols.map(m => num(l.valores[m])), num(tot(l))]);
+        (l.categorias || []).forEach(c => linhas.push([l.nome, c.grupo, c.nome, ...mesesCols.map(m => num(c.valores[m])), num(tot(c))]));
+      });
+      baixar(`dre-${mesesCols[0].slice(0, 7)}-a-${mesesCols[mesesCols.length - 1].slice(0, 7)}.csv`, linhas.map(l => l.map(csvCell).join(';')).join('\r\n'));
     };
   };
   await render();
@@ -1160,6 +1241,8 @@ async function viewPessoas(){
 }
 
 // ------------------------------------------------------------ CADASTROS ----
+const ordemDre = c => (S.lk.dreLinhas || []).find(l => l.codigo === c)?.ordem ?? 999;
+const nomeDre = c => (S.lk.dreLinhas || []).find(l => l.codigo === c)?.nome || html`<span class="muted small">—</span>`;
 async function viewCadastros(){
   const st = store.get('fin_cad') || { aba:'fornecedores', busca:'' };
   const defs = {
@@ -1173,8 +1256,13 @@ async function viewCadastros(){
         { key:'centro_custo_padrao_id', label:'Centro de custo padrão', type:'select', options:() => opts(S.lk.centros) }, { key:'conta_padrao_id', label:'Conta padrão', type:'select', options:() => opts(S.lk.contas) },
         { key:'dados_bancarios', label:'Dados bancários', type:'textarea' }, { key:'observacoes', label:'Observações', type:'textarea' },
         { key:'exige_nf', label:'Exige nota fiscal para pagar (aparece no portal e no “quem não enviou”)', type:'bool', full:true }, { key:'ativo', label:'Ativo', type:'bool' }] },
-    categorias: { titulo:'Categorias', tabela:'categorias', lista:() => S.lk.categorias, cols:[['nome','Nome'],['tipo','Tipo'],['grupo','Grupo']],
-      fields:[{ key:'nome', label:'Nome', required:true }, { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'despesa',label:'Despesa'},{value:'receita',label:'Receita'},{value:'neutra',label:'Neutra (fora do resultado)'}] }, { key:'grupo', label:'Grupo (linha do DRE)' }, { key:'ativo', label:'Ativa', type:'bool' }] },
+    categorias: { titulo:'Plano de contas', tabela:'categorias',
+      // em ordem de DRE: linha → grupo → categoria; neutras no fim
+      lista:() => [...S.lk.categorias].sort((a, b) => (ordemDre(a.dre_linha) - ordemDre(b.dre_linha)) || (a.grupo || '').localeCompare(b.grupo || '') || a.nome.localeCompare(b.nome)),
+      cols:[['dre_linha','Linha do DRE', (v, x) => x.tipo === 'neutra' ? html`<span class="muted small">fora do resultado</span>` : nomeDre(v)],['grupo','Grupo', v => v || html`<span class="muted small">—</span>`],['nome','Categoria'],['tipo','Tipo']],
+      fields:[{ key:'nome', label:'Nome', required:true }, { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'despesa',label:'Despesa'},{value:'receita',label:'Receita'},{value:'neutra',label:'Neutra (fora do resultado: transferência, aplicação, aporte, distribuição de lucros)'}] },
+        { key:'dre_linha', label:'Linha do DRE', type:'select', options:() => (S.lk.dreLinhas || []).filter(l => !l.subtotal).map(l => ({ value:l.codigo, label:l.nome })), hint:'Em branco: o sistema escolhe pelo grupo. Neutra fica sempre fora do DRE.' },
+        { key:'grupo', label:'Grupo', hint:'Agrupa categorias parecidas dentro da linha. Ex.: Mídia paga, Eventos' }, { key:'ativo', label:'Ativa', type:'bool' }] },
     centros: { titulo:'Centros de custo', tabela:'centros_custo', lista:() => S.lk.centros, cols:[['nome','Nome']], fields:[{ key:'nome', label:'Nome', required:true }, { key:'ativo', label:'Ativo', type:'bool' }] },
     contas: { titulo:'Contas e cartões', tabela:'contas_bancarias', lista:() => S.lk.contas, cols:[['nome','Nome'],['tipo','Tipo'],['saldo_inicial','Saldo inicial', money],['data_saldo_inicial','Em', brDate],['dia_vencimento','Cartão: fecha/vence', (v, x) => x.tipo === 'cartao' ? `dia ${x.dia_fechamento ?? '?'} / dia ${v ?? '?'}` : '']],
       fields:[{ key:'nome', label:'Nome', required:true }, { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'corrente',label:'Conta corrente'},{value:'investimento',label:'Investimento'},{value:'cartao',label:'Cartão de crédito'},{value:'caixa',label:'Caixa'}] },
