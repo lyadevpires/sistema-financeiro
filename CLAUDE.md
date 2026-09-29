@@ -71,7 +71,11 @@ Detalhes e motivos em `docs/regras-de-negocio.md`. Resumo:
 - **Funções SQL** chamadas pelo front verificam permissão no começo (`if not is_financeiro() then raise exception ...`)
   e levantam mensagens em português que podem ir direto para a tela.
 - **Cores:** só pelos tokens CSS do `:root` (tema claro e escuro). Entradas = `--pos` (azul), saídas = `--neg` (vermelho),
-  sucesso/pago = `--ok` (verde), atenção = `--warn`, marca = `--brand` (violeta).
+  sucesso/pago = `--ok` (verde), atenção = `--warn`, marca = `--brand` (verde floresta). Cartões com título usam a faixa `.band`.
+  Referência visual aprovada pelo usuário: `docs/prototipos/novo-design.html`.
+- **Painel:** abre enxuto (4 números + 1 gráfico + destaques escritos); o resto fica em abas. Não encher a primeira tela.
+- **Modo demonstração:** `npm run dev` e abrir `http://localhost:3000/?demo` — dados fictícios de `public/js/demo.js`, sem login
+  e sem tocar no banco. Só funciona em localhost. Use para revisar telas; mantenha `demo.js` respondendo às tabelas/views novas.
 - **Textos da interface:** diretos, na voz de quem usa ("Conciliar", "Registrar pagamento"). Erro diz o que houve e o que fazer.
 - **Dados reais** (nomes, salários, pró-labore) só em `dados-privados/`, que não vai para o git. Em teste, use dados fictícios.
 - Não faça `supabase db push`, `vercel --prod` nem nada que altere produção sem confirmação explícita do usuário.

@@ -6,133 +6,167 @@
 <title>Financeiro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  /* entradas = azul (--pos), saídas = vermelho (--neg), marca = violeta, sucesso = verde (--ok) */
-  --bg:#F4F5FB; --surface:#FFFFFF; --surface-2:#EEF0F8; --ink:#141527; --ink-2:#44476A; --ink-3:#74789C;
-  --line:#E1E3EF; --brand:#6D28D9; --brand-ink:#FFFFFF; --brand-soft:#EDE4FF;
-  --pos:#1463F3; --pos-soft:#E1EBFF; --neg:#E11D48; --neg-soft:#FFE1E7; --ok:#0E9F6E; --ok-soft:#DCF7EC;
-  --warn:#D97706; --warn-soft:#FEF0D7; --info:#6D28D9; --info-soft:#EDE4FF;
-  --side:#1B1340; --side-2:#2A1F5C; --side-ink:#F1EEFF; --side-ink-2:#A89FD8;
-  --shadow:0 1px 2px rgba(20,21,39,.05),0 8px 24px rgba(20,21,39,.06);
-  --r:10px; --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  /* marca = verde floresta; entradas = azul (--pos); saídas = vermelho (--neg); sucesso = verde (--ok) */
+  --bg:#F5F4EF; --surface:#FFFFFF; --surface-2:#F3F5F1; --ink:#1E2A24; --ink-2:#4B5A52; --ink-3:#7F8C84;
+  --line:#E6E8E2; --line-2:#D5DAD2; --brand:#2F6B4F; --brand-2:#4E8F6C; --brand-ink:#FFFFFF; --brand-soft:#E4EFE7; --brand-band:#EAF2EB;
+  --pos:#2F6DB5; --pos-2:#9CBCE3; --pos-soft:#E5EEF8; --neg:#C8453C; --neg-2:#E9A8A1; --neg-soft:#FBE9E6;
+  --ok:#2E8B57; --ok-soft:#E0F2E7; --warn:#B7741A; --warn-soft:#FBF0DD; --info:#2F6B4F; --info-soft:#E4EFE7;
+  --sage:#A9C4B0; --sage-2:#CFDDD2; --sand:#E2D2BC; --terra:#D9A38F;
+  --shadow:0 1px 2px rgba(30,42,36,.04),0 10px 30px -14px rgba(30,42,36,.12);
+  --r:14px; --head:'Manrope',system-ui,sans-serif; --sans:'Inter',system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0F1020; --surface:#181A2E; --surface-2:#20233B; --ink:#EEF0FF; --ink-2:#B7BBDD; --ink-3:#8488AC;
-  --line:#2C2F4A; --brand:#A78BFA; --brand-ink:#140A33; --brand-soft:#2B2050;
-  --pos:#5B9BFF; --pos-soft:#16264A; --neg:#FF5C7A; --neg-soft:#401622; --ok:#34D399; --ok-soft:#10332A;
-  --warn:#FBBF24; --warn-soft:#3A2B0B; --info:#A78BFA; --info-soft:#2B2050;
-  --side:#0B0B18; --side-2:#1E1A3A; --side-ink:#EEF0FF; --side-ink-2:#8F89BF;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+  --bg:#111613; --surface:#18201B; --surface-2:#1E2822; --ink:#E9EFEA; --ink-2:#B4C2B8; --ink-3:#7F8F85;
+  --line:#26312A; --line-2:#334037; --brand:#6DB58C; --brand-2:#8FCBA8; --brand-ink:#0F1A13; --brand-soft:#1F3328; --brand-band:#1D2C23;
+  --pos:#6FA6E6; --pos-2:#34557D; --pos-soft:#18263A; --neg:#EF7B70; --neg-2:#7A3A35; --neg-soft:#3A1D1A;
+  --ok:#5CC98B; --ok-soft:#173226; --warn:#E3A64B; --warn-soft:#352914; --info:#6DB58C; --info-soft:#1F3328;
+  --sage:#4E7A5E; --sage-2:#2E4637; --sand:#5A4E3E; --terra:#8A5A4A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.5); color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --bg:#0F1020; --surface:#181A2E; --surface-2:#20233B; --ink:#EEF0FF; --ink-2:#B7BBDD; --ink-3:#8488AC;
-  --line:#2C2F4A; --brand:#A78BFA; --brand-ink:#140A33; --brand-soft:#2B2050;
-  --pos:#5B9BFF; --pos-soft:#16264A; --neg:#FF5C7A; --neg-soft:#401622; --ok:#34D399; --ok-soft:#10332A;
-  --warn:#FBBF24; --warn-soft:#3A2B0B; --info:#A78BFA; --info-soft:#2B2050;
-  --side:#0B0B18; --side-2:#1E1A3A; --side-ink:#EEF0FF; --side-ink-2:#8F89BF;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+  --bg:#111613; --surface:#18201B; --surface-2:#1E2822; --ink:#E9EFEA; --ink-2:#B4C2B8; --ink-3:#7F8F85;
+  --line:#26312A; --line-2:#334037; --brand:#6DB58C; --brand-2:#8FCBA8; --brand-ink:#0F1A13; --brand-soft:#1F3328; --brand-band:#1D2C23;
+  --pos:#6FA6E6; --pos-2:#34557D; --pos-soft:#18263A; --neg:#EF7B70; --neg-2:#7A3A35; --neg-soft:#3A1D1A;
+  --ok:#5CC98B; --ok-soft:#173226; --warn:#E3A64B; --warn-soft:#352914; --info:#6DB58C; --info-soft:#1F3328;
+  --sage:#4E7A5E; --sage-2:#2E4637; --sand:#5A4E3E; --terra:#8A5A4A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.5); color-scheme:dark;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;margin:0}
-h1{font-size:28px} h2{font-size:19px} h3{font-size:15px;font-family:var(--sans)}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1}
+h1,h2,h3{font-family:var(--head);font-weight:800;letter-spacing:-.01em;margin:0}
+h1{font-size:28px;line-height:1.15} h2{font-size:17px;font-weight:700} h3{font-size:15px;font-weight:700}
 a{color:var(--brand)}
 button,input,select,textarea{font:inherit;color:inherit}
-.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .muted{color:var(--ink-3)} .small{font-size:12px}
 .pos{color:var(--pos)} .neg{color:var(--neg)} .ok{color:var(--ok)}
-.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
-.side{background:var(--side);color:var(--side-ink);border-right:0;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:2px}
-.brand{font-family:var(--serif);font-size:20px;padding:0 10px 18px}
-.brand{color:var(--side-ink)} .brand small{display:block;font-family:var(--sans);font-size:11px;color:var(--side-ink-2);letter-spacing:.06em;text-transform:uppercase}
-.nav-sec{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--side-ink-2);padding:14px 10px 4px}
-.nav a{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:8px;text-decoration:none;color:var(--side-ink);opacity:.86}
-.nav a:hover{background:var(--side-2);opacity:1} .nav a.on{background:var(--brand);color:#fff;opacity:1;font-weight:500}
-.badge{background:#FF7A1A;color:#fff;border-radius:99px;font-size:11px;padding:0 7px;font-weight:600}
-.side-foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--side-2);font-size:12px;color:var(--side-ink-2)} .side-foot .muted{color:var(--side-ink-2)} .side-foot .linkbtn{color:var(--side-ink)}
-.main{padding:28px 32px 60px;min-width:0}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.head p{margin:4px 0 0;color:var(--ink-3)}
+.app{display:grid;grid-template-columns:auto 1fr;min-height:100vh}
+.side{width:240px;background:var(--surface);border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:2px;transition:width .2s}
+.app.mini .side{width:72px} .app.mini .side .lbl,.app.mini .nav-sec,.app.mini .brand-txt,.app.mini .who,.app.mini .badge{display:none}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 8px 22px}
+.logo{width:36px;height:36px;border-radius:11px;background:var(--brand);display:grid;place-items:center;flex:none}
+.logo svg{width:20px;height:20px;stroke:var(--brand-ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.brand-txt small{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.brand-txt b{font-family:var(--head);font-weight:800;font-size:17px}
+.nav-sec{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:16px 12px 6px}
+.nav a{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;text-decoration:none;color:var(--ink-2);font-weight:500;white-space:nowrap}
+.nav a:hover{background:var(--surface-2);color:var(--ink)} .nav a.on{background:var(--brand-soft);color:var(--brand);font-weight:600}
+.nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.badge{margin-left:auto;background:var(--neg-soft);color:var(--neg);border-radius:99px;font-size:11px;padding:0 8px;font-weight:700}
+.side-foot{margin-top:auto;padding:14px 8px 0;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:10px}
+.av{width:32px;height:32px;border-radius:99px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-weight:700;flex:none}
+.who b{display:block;color:var(--ink);font-weight:600;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.top{display:flex;align-items:center;gap:10px;padding:12px 32px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);position:sticky;top:0;z-index:30}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;cursor:pointer;color:var(--ink-2);flex:none}
+.icon-btn:hover{background:var(--surface-2)}
+.icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.main{padding:26px 32px 60px;min-width:0;max-width:1400px;width:100%;margin:0 auto}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.head p{margin:6px 0 0;color:var(--ink-3)}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);font-weight:700;margin-bottom:6px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .grow{flex:1}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
 .card.pad{padding:18px 20px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
-.kpi{padding:16px 18px}
-.kpi .l{font-size:12px;color:var(--ink-3)} .kpi .v{font-family:var(--mono);font-size:clamp(16px,1.6vw,21px);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kpi .s{font-size:12px;color:var(--ink-3);margin-top:2px}
-.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
-.btn{text-decoration:none;display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);padding:7px 13px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.band{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--brand-band);padding:10px 20px;border-bottom:1px solid var(--line);border-radius:var(--r) var(--r) 0 0}
+.band h2{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);font-weight:800;font-family:var(--sans)}
+.band .muted{font-size:12px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:16px}
+.kpi{padding:18px 20px}
+.kpi .l{font-size:11.5px;color:var(--ink-3);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.kpi .v{font-family:var(--head);font-weight:800;font-size:clamp(20px,2vw,28px);letter-spacing:-.02em;margin:8px 0 6px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .v small{font-size:.52em;color:var(--ink-3);margin-left:3px;font-weight:600}
+.kpi .s{font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kpi.hl{background:var(--brand);border-color:var(--brand)} .kpi.hl .l,.kpi.hl .s,.kpi.hl .v small{color:color-mix(in srgb,var(--brand-ink) 78%,transparent)} .kpi.hl .v{color:var(--brand-ink)}
+.delta{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--surface-2);color:var(--ink-2)}
+.delta.up{background:var(--ok-soft);color:var(--ok)} .delta.down{background:var(--neg-soft);color:var(--neg)}
+.kpi.hl .delta{background:color-mix(in srgb,var(--brand-ink) 18%,transparent);color:var(--brand-ink)}
+.grid2{display:grid;grid-template-columns:1.65fr 1fr;gap:14px;margin-bottom:14px}
+.btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:10px;cursor:pointer;white-space:nowrap;font-weight:600;font-size:13px;color:var(--ink)}
 .btn:hover{background:var(--surface-2)}
 .btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)} .btn.pri:hover{filter:brightness(1.08)}
 .btn.danger{color:var(--neg)} .btn.ok{color:var(--ok);border-color:var(--ok-soft)}
-.btn.sm{padding:3px 9px;font-size:12px}
+.btn.sm{padding:3px 10px;font-size:12px;border-radius:8px}
 .btn:disabled{opacity:.5;cursor:default}
 .linkbtn{background:none;border:0;color:var(--brand);cursor:pointer;padding:0;text-decoration:underline}
-input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+input,select,textarea{background:var(--surface);border:1px solid var(--line-2);border-radius:9px;padding:7px 10px;min-width:0}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--brand-soft);border-color:var(--brand)}
 textarea{min-height:70px;resize:vertical;width:100%}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
-.tabs button{border:0;background:none;padding:8px 12px;cursor:pointer;color:var(--ink-3);border-bottom:2px solid transparent;white-space:nowrap}
-.tabs button.on{color:var(--ink);border-color:var(--brand);font-weight:500}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-2);margin-bottom:16px;overflow-x:auto;overflow-y:hidden}
+.tabs button{border:0;background:none;padding:10px 14px;cursor:pointer;color:var(--ink-3);border-bottom:2.5px solid transparent;white-space:nowrap;font-weight:600;margin-bottom:-1px}
+.tabs button.on{color:var(--brand);border-color:var(--brand)}
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse}
-th{text-align:left;font-weight:500;font-size:12px;color:var(--ink-3);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+th{text-align:left;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:10px 12px;border-bottom:1px solid var(--line-2);white-space:nowrap;background:var(--surface-2)}
 td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
 tr:last-child td{border-bottom:0}
 tbody tr:hover td{background:var(--surface-2)}
 td.r,th.r{text-align:right}
-tfoot td{font-weight:600;border-top:1px solid var(--line)}
-.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
-.p-previsto{background:var(--surface-2);color:var(--ink-2)} .p-aprovado{background:var(--brand-soft);color:var(--brand)}
+tfoot td{font-weight:800;border-top:2px solid var(--brand);background:var(--brand-band)}
+.tb th{background:var(--brand);color:var(--brand-ink);border:0}
+.tb tbody tr:nth-child(even) td{background:var(--surface-2)}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.p-previsto{background:var(--surface-2);color:var(--ink-2)} .p-aprovado{background:var(--pos-soft);color:var(--pos)}
 .p-pago,.p-paga{background:var(--ok-soft);color:var(--ok)} .p-atrasado,.p-rejeitada{background:var(--neg-soft);color:var(--neg)}
 .p-cancelado{background:var(--surface-2);color:var(--ink-3);text-decoration:line-through}
 .p-enviada{background:var(--warn-soft);color:var(--warn)} .p-aprovada{background:var(--brand-soft);color:var(--brand)}
-.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px;border-bottom:1px solid var(--line)}
-.pager{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line)}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
 .empty{padding:36px;text-align:center;color:var(--ink-3)}
-.modal-bg{position:fixed;inset:0;background:rgba(15,22,20,.45);display:flex;align-items:flex-start;justify-content:center;padding:5vh 16px;z-index:50;overflow:auto}
-.modal{background:var(--surface);border-radius:14px;width:min(640px,100%);box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.modal header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-bg{position:fixed;inset:0;background:rgba(17,22,19,.45);display:flex;align-items:flex-start;justify-content:center;padding:5vh 16px;z-index:50;overflow:auto}
+.modal{background:var(--surface);border-radius:16px;width:min(640px,100%);box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+.modal header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--brand-band)}
 .modal .body{padding:18px 22px;display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
 .modal footer{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
 .f{display:flex;flex-direction:column;gap:4px} .f.full{grid-column:1/-1}
-.f label{font-size:12px;color:var(--ink-2);font-weight:500} .f .hint{font-size:11px;color:var(--ink-3)}
+.f label{font-size:12px;color:var(--ink-2);font-weight:600} .f .hint{font-size:11px;color:var(--ink-3)}
 .f input,.f select{width:100%}
 .chk{flex-direction:row;align-items:center;gap:8px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:60;box-shadow:var(--shadow);max-width:90vw}
 .toast.err{background:var(--neg);color:#fff}
-.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
-.bar > i{display:block;height:100%;background:var(--brand)} .bar > i.over{background:var(--neg)}
+.bar,.mbar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar > i,.mbar > i{display:block;height:100%;background:var(--brand);border-radius:99px} .bar > i.over{background:var(--neg)}
 .list-item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
 .list-item:last-child{border-bottom:0}
-.note{background:var(--warn-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:13px}
+.note{background:var(--warn-soft);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:13px}
 .note.info{background:var(--info-soft)} .note.neg{background:var(--neg-soft)}
 .auth{min-height:100vh;display:grid;place-items:center;padding:24px}
-.auth .card{width:min(400px,100%);padding:28px}
+.auth .card{width:min(400px,100%);padding:30px}
 .auth form{display:flex;flex-direction:column;gap:12px;margin-top:18px}
 .auth input{width:100%}
 .steps{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
 .steps span.on{color:var(--ink);font-weight:600}
-.dre td:first-child{white-space:nowrap} .dre tr.grp td{background:var(--surface-2);font-weight:600}
-.dre tr.tot td{font-weight:700;border-top:2px solid var(--line)}
+.dre td:first-child{white-space:nowrap} .dre tr.grp td{background:var(--brand-band);font-weight:700}
+.dre tr.tot td{font-weight:800;border-top:2px solid var(--brand);background:var(--brand-band)}
 .chart svg{width:100%;height:auto;display:block}
+.chart-wrap{padding:14px 16px 12px} .chart-wrap svg{width:100%;height:auto;display:block}
 .legend{display:flex;gap:14px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.donut-wrap{display:flex;align-items:center;gap:20px;padding:18px 20px 20px;flex-wrap:wrap;justify-content:center}
+.donut{width:140px;height:140px;flex:none}
+.lg{flex:1 1 220px;display:grid;gap:9px;font-size:13px;min-width:0}
+.lg div{display:grid;grid-template-columns:12px minmax(0,1fr) auto auto;gap:10px;align-items:center}
+.lg div > span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg i{width:10px;height:10px;border-radius:3px}
+.lg .p{color:var(--ink-3);font-size:12px;width:40px;text-align:right}
+.lg .tot{border-top:1px solid var(--line);padding-top:9px;font-weight:700}
+.destaques ul{margin:8px 0 0;padding-left:18px;color:var(--ink-2);display:grid;gap:5px}
 .portal{max-width:880px;margin:0 auto;padding:28px 16px 60px}
 .nf-item{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
 .nf-item:last-child{border-bottom:0}
 .menu-btn{display:none}
+@media (max-width:1100px){.grid2{grid-template-columns:1fr}}
 @media (max-width:900px){
   .app{grid-template-columns:1fr}
   .side{position:fixed;inset:0 auto 0 0;width:260px;z-index:40;transform:translateX(-100%);transition:transform .2s}
-  .side.open{transform:none}
-  .menu-btn{display:inline-flex}
-  .main{padding:18px 16px 60px}
-  .grid2{grid-template-columns:1fr}
+  .side.open{transform:none} .app.mini .side{width:260px}
+  .menu-btn{display:grid} .mini-btn{display:none}
+  .main{padding:18px 16px 60px} .top{padding:10px 16px}
   .modal .body{grid-template-columns:1fr}
+  .donut-wrap{flex-direction:column;align-items:stretch} .donut{margin:0 auto}
   h1{font-size:23px}
 }
 </style>
@@ -224,8 +258,10 @@ const isFin = () => ['admin','financeiro'].includes(S.perfil?.papel);
 const isAdmin = () => S.perfil?.papel === 'admin';
 const isInterno = () => ['admin','financeiro','leitura'].includes(S.perfil?.papel);
 
+// Modo demonstração: dados fictícios em memória, só em localhost com ?demo (para revisar telas sem login).
+const DEMO = ['localhost', '127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).has('demo');
 async function boot(){
-  sb = createClient(cfg.url, cfg.anonKey);
+  sb = DEMO ? (await import('./js/demo.js')).criarClienteDemo() : createClient(cfg.url, cfg.anonKey);
   sb.auth.onAuthStateChange((ev, session) => {
     if (ev === 'PASSWORD_RECOVERY') { S.recovery = true; renderAuth('nova-senha'); return; }
     if (ev === 'SIGNED_OUT') { S.session = null; S.perfil = null; renderAuth('entrar'); }
@@ -473,20 +509,38 @@ async function nfForm(nf=null, { fornecedorId=null, depois=portalLista } = {}){
 // ============================================================================
 // SISTEMA INTERNO
 // ============================================================================
+// ícones do menu: traços SVG 24×24 (stroke), escritos aqui mesmo
+const ICONES = {
+  painel:'<path d="M3 12l9-8 9 8M5 10v10h14V10"/>',
+  relatorios:'<path d="M4 4h16v16H4zM4 9h16M4 14h16M10 9v11"/>',
+  projetos:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  pessoas:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0113 0M16 4.5a3.5 3.5 0 010 7M21.5 20a6.5 6.5 0 00-4-6"/>',
+  pagar:'<path d="M12 5v14M5 12l7 7 7-7"/>',
+  receber:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  notas:'<path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/>',
+  conciliacao:'<path d="M4 7h16M4 12h10M4 17h7M15 16l2 2 4-4"/>',
+  cartoes:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/>',
+  recorrencias:'<path d="M4 12a8 8 0 0114-5M20 12a8 8 0 01-14 5M18 3v4h-4M6 21v-4h4"/>',
+  cadastros:'<path d="M4 6h16M4 12h16M4 18h10"/>',
+  exportar:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+  usuarios:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/>',
+  parametros:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+  auditoria:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4M11 8v3l2 2"/>',
+};
+const icone = id => raw(`<svg viewBox="0 0 24 24" aria-hidden="true">${ICONES[id] || ''}</svg>`);
 const ROTAS = [
-  { sec:'Visão geral' },
-  { id:'painel', label:'Painel', fn:viewPainel },
+  { sec:'Diretoria' },
+  { id:'painel', label:'Visão geral', fn:viewPainel },
+  { id:'relatorios', label:'Demonstrativo (DRE)', fn:viewRelatorios },
+  { id:'projetos', label:'Projetos e eventos', fn:viewProjetos },
+  { id:'pessoas', label:'Custo de pessoas', fn:viewPessoas },
   { sec:'Operação' },
   { id:'pagar', label:'Contas a pagar', fn:() => viewLancamentos('pagar') },
   { id:'receber', label:'Contas a receber', fn:() => viewLancamentos('receber') },
   { id:'notas', label:'Notas fiscais', fn:viewNotas, badge:'nfPend' },
   { id:'conciliacao', label:'Conciliação bancária', fn:viewConciliacao, badge:'extPend' },
   { id:'cartoes', label:'Cartões de crédito', fn:viewCartoes },
-  { id:'recorrencias', label:'Recorrências', fn:viewRecorrencias },
-  { sec:'Análise' },
-  { id:'relatorios', label:'Relatórios (DRE)', fn:viewRelatorios },
-  { id:'projetos', label:'Projetos e eventos', fn:viewProjetos },
-  { id:'pessoas', label:'Custo de pessoas', fn:viewPessoas },
+  { id:'recorrencias', label:'Contas fixas', fn:viewRecorrencias },
   { sec:'Configuração' },
   { id:'cadastros', label:'Cadastros', fn:viewCadastros },
   { id:'exportar', label:'Exportar planilha', fn:viewExportar },
@@ -494,6 +548,14 @@ const ROTAS = [
   { id:'parametros', label:'Parâmetros', fn:viewParametros, fin:true },
   { id:'auditoria', label:'Auditoria', fn:viewAuditoria, fin:true },
 ];
+
+// tema claro/escuro escolhido pela pessoa (sem escolha, segue o sistema operacional)
+const aplicaTema = t => { if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; };
+aplicaTema(store.get('fin_tema'));
+function alternaTema(){
+  const escuroAgora = document.documentElement.dataset.theme === 'dark' || (!document.documentElement.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+  const t = escuroAgora ? 'light' : 'dark'; store.set('fin_tema', t); aplicaTema(t);
+}
 
 async function route(){
   const id = location.hash.replace('#/','') || 'painel';
@@ -503,88 +565,255 @@ async function route(){
   try { const r2 = await q(sb.from('notas_fiscais').select('id', { count:'exact', head:true }).eq('status','enviada')); nfPend = r2.count || 0; } catch {}
   try { const r3 = await q(sb.from('extrato_linhas').select('id', { count:'exact', head:true }).eq('status','pendente')); extPend = r3.count || 0; } catch {}
   const badges = { nfPend, extPend };
-  root.innerHTML = html`<div class="app">
-    <aside class="side" id="side"><div class="brand"><small>Sistema</small>Financeiro</div>
-      <nav class="nav">${ROTAS.filter(x => x.sec || ((!x.admin || isAdmin()) && (!x.fin || isFin()))).map(x => x.sec ? html`<div class="nav-sec">${x.sec}</div>` : html`<a href="#/${x.id}" class="${x.id === r.id ? 'on' : ''}">${x.label}${x.badge && badges[x.badge] ? html`<span class="badge">${badges[x.badge]}</span>` : ''}</a>`)}</nav>
-      <div class="side-foot">${S.perfil.nome || S.session.user.email}<br><span class="muted">${S.perfil.papel}</span> · <button class="linkbtn" id="sair">sair</button></div>
+  const nome = S.perfil.nome || S.session.user.email;
+  root.innerHTML = html`<div class="app${store.get('fin_menu_mini') ? ' mini' : ''}" id="app">
+    <aside class="side" id="side">
+      <div class="brand"><div class="logo">${raw('<svg viewBox="0 0 24 24"><path d="M4 17l5-5 4 4 7-7M14 9h6v6"/></svg>')}</div><div class="brand-txt"><small>Sistema</small><b>Financeiro</b></div></div>
+      <nav class="nav">${ROTAS.filter(x => x.sec || ((!x.admin || isAdmin()) && (!x.fin || isFin()))).map(x => x.sec ? html`<div class="nav-sec">${x.sec}</div>` : html`<a href="#/${x.id}" class="${x.id === r.id ? 'on' : ''}" title="${x.label}">${icone(x.id)}<span class="lbl">${x.label}</span>${x.badge && badges[x.badge] ? html`<span class="badge">${badges[x.badge]}</span>` : ''}</a>`)}</nav>
+      <div class="side-foot"><div class="av">${nome.slice(0,1).toUpperCase()}</div><div class="who"><b>${nome}</b>${S.perfil.papel} · <button class="linkbtn" id="sair">sair</button></div></div>
     </aside>
-    <main class="main"><button class="btn sm menu-btn" id="menu" style="margin-bottom:12px">☰ Menu</button><div id="view"><div class="empty">Carregando…</div></div></main></div>`.s;
+    <div style="min-width:0">
+      <header class="top">
+        <button class="icon-btn menu-btn" id="menu" title="Menu">${raw('<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>')}</button>
+        <button class="icon-btn mini-btn" id="mini" title="Recolher ou abrir o menu">${raw('<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>')}</button>
+        <div class="grow"></div>
+        <button class="icon-btn" id="tema" title="Tema claro/escuro">${raw('<svg viewBox="0 0 24 24"><path d="M21 13a9 9 0 11-10-10 7 7 0 0010 10z"/></svg>')}</button>
+      </header>
+      <main class="main"><div id="view"><div class="empty">Carregando…</div></div></main>
+    </div></div>`.s;
   $('#sair').onclick = () => sb.auth.signOut();
   $('#menu').onclick = () => $('#side').classList.toggle('open');
+  $('#mini').onclick = () => { const on = $('#app').classList.toggle('mini'); store.set('fin_menu_mini', on); };
+  $('#tema').onclick = () => { alternaTema(); if (r.id === 'painel') route(); };
+  $$('#side .nav a').forEach(a => a.addEventListener('click', () => $('#side').classList.remove('open')));
   try { await r.fn($('#view')); } catch(e) { $('#view').innerHTML = html`<div class="note neg">${errMsg(e)}</div>`.s; }
 }
 const view = () => $('#view');
 
 // ---------------------------------------------------------------- PAINEL ----
+// Abre enxuto: 4 números + um gráfico + destaques. Detalhes ficam nas abas.
+const fmtCompacto = v => {
+  const a = Math.abs(v), s = v < 0 ? '−' : '';
+  if (a >= 1e6) return { n: s + 'R$ ' + (a / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 2 }), u: 'mi' };
+  if (a >= 1e4) return { n: s + 'R$ ' + (a / 1e3).toLocaleString('pt-BR', { maximumFractionDigits: 1 }), u: 'mil' };
+  return { n: s + BRL.format(a), u: '' };
+};
+const valorKpi = v => { const c = fmtCompacto(v); return html`<span title="${money(v)}">${c.n}${c.u ? html`<small>${c.u}</small>` : ''}</span>`; };
+const pct = (v, d = 1) => (v * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
+function delta(atual, anterior, { saida = false } = {}){
+  if (!anterior) return '';
+  const d = (atual - anterior) / Math.abs(anterior);
+  if (!isFinite(d) || Math.abs(d) < 0.0005) return html`<span class="delta">= mês anterior</span>`;
+  const bom = saida ? d < 0 : d > 0;
+  return html`<span class="delta ${bom ? 'up' : 'down'}">${d > 0 ? '▲' : '▼'} ${pct(Math.abs(d))}</span>`;
+}
+// agrupa linhas de vw_resultado_categoria (realizado) por um campo
+const somaPor = (rows, campo) => { const o = {}; rows.forEach(r => { o[r[campo]] = (o[r[campo]] || 0) + Number(r.realizado || 0); }); return Object.entries(o).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]); };
+
 async function viewPainel(){
-  const mes = monthKey(), ini = firstDay(mes), fim = lastDay(mes);
-  const hoje = today(), em10 = iso(new Date(Date.now() + 10*864e5));
-  const [aberto, atrasados, fluxo, prox, saldos, nfs] = await Promise.all([
-    q(sb.from('vw_lancamentos').select('tipo,valor').in('status',['previsto','aprovado']).gte('data_vencimento', ini).lte('data_vencimento', fim)),
-    q(sb.from('vw_lancamentos').select('tipo,valor').eq('situacao','atrasado')),
-    q(sb.from('vw_fluxo_mensal').select('*').gte('mes', firstDay(addMonths(mes,-5))).lte('mes', firstDay(addMonths(mes,3))).order('mes')),
-    q(sb.from('vw_lancamentos').select('id,tipo,descricao,valor,data_vencimento,fornecedor,situacao,aguardando_nf').in('status',['previsto','aprovado']).is('fatura_id', null).gte('data_vencimento', hoje).lte('data_vencimento', em10).order('data_vencimento').limit(10)),
+  const st = store.get('fin_painel') || {};
+  const mes = st.mes && st.mes <= monthKey() ? st.mes : monthKey(), ini = firstDay(mes), ant = firstDay(addMonths(mes, -1));
+  const aba = st.aba || 'geral';
+  const hoje = today();
+  const [fluxo, saldos, res] = await Promise.all([
+    q(sb.from('vw_fluxo_mensal').select('*').gte('mes', firstDay(addMonths(mes, -11))).lte('mes', firstDay(addMonths(mes, 3))).order('mes')),
     q(sb.from('vw_saldo_contas').select('*')),
-    q(sb.from('notas_fiscais').select('valor').eq('status','enviada')),
+    q(sb.from('vw_resultado_categoria').select('tipo,grupo,categoria,mes,realizado').in('mes', [ini, ant]).limit(5000)),
   ]);
-  // faturas de cartão aparecem como uma saída só, não compra a compra
-  const fatsProx = await q(sb.from('vw_faturas').select('cartao,total,data_vencimento').neq('status','paga').gte('data_vencimento', hoje).lte('data_vencimento', em10)).catch(() => []);
-  prox.push(...fatsProx.filter(f => Number(f.total) > 0).map(f => ({ tipo:'pagar', descricao:`Fatura ${f.cartao}`, valor:f.total, data_vencimento:f.data_vencimento })));
-  prox.sort((a, b) => a.data_vencimento.localeCompare(b.data_vencimento));
-  const sum = (arr, t) => arr.filter(x => !t || x.tipo === t).reduce((a,x) => a + Number(x.valor), 0);
-  const fm = fluxo.find(x => x.mes === ini) || {};
-  const saldoTotal = saldos.filter(x => x.tipo !== 'cartao').reduce((a,x) => a + Number(x.saldo_atual), 0);
+  const fm = fluxo.find(x => x.mes === ini) || {}, fa = fluxo.find(x => x.mes === ant) || {};
+  const ent = +fm.receitas_realizadas || 0, sai = +fm.despesas_realizadas || 0, entA = +fa.receitas_realizadas || 0, saiA = +fa.despesas_realizadas || 0;
+  const saldoTotal = saldos.filter(x => x.tipo !== 'cartao').reduce((a, x) => a + Number(x.saldo_atual), 0);
+  const semSaldoInicial = saldos.some(s => s.tipo !== 'cartao' && !s.data_saldo_inicial);
+  const resMes = res.filter(r => r.mes === ini), resAnt = res.filter(r => r.mes === ant);
+  const saidasGrupo = somaPor(resMes.filter(r => r.tipo === 'pagar'), 'grupo'), saidasGrupoAnt = Object.fromEntries(somaPor(resAnt.filter(r => r.tipo === 'pagar'), 'grupo'));
+  const entradasCat = somaPor(resMes.filter(r => r.tipo === 'receber'), 'categoria');
+
+  // destaques escritos a partir dos números — o que a diretoria leria primeiro
+  const destaques = [];
+  if (ent && entA) destaques.push(html`<span class="pos">Entradas</span> ${ent >= entA ? 'cresceram' : 'caíram'} ${pct(Math.abs(ent - entA) / entA)} em relação a ${brMonth(ant)}${entradasCat[0] ? html`, com ${entradasCat[0][0]} respondendo por ${pct(entradasCat[0][1] / entradasCat.reduce((a, x) => a + x[1], 0), 0)}` : ''}.`);
+  const maiorAlta = saidasGrupo.map(([g, v]) => [g, v, saidasGrupoAnt[g] || 0]).filter(x => x[2] > 0).sort((a, b) => (b[1] - b[2]) - (a[1] - a[2]))[0];
+  if (maiorAlta && maiorAlta[1] > maiorAlta[2]) destaques.push(html`A maior alta de gastos foi em <span class="neg">${maiorAlta[0]}</span>: +${money(maiorAlta[1] - maiorAlta[2])} (${pct((maiorAlta[1] - maiorAlta[2]) / maiorAlta[2])}).`);
+  if (ent || sai) destaques.push(html`O mês ${ent - sai >= 0 ? 'fechou com sobra' : 'fechou com falta'} de caixa de <b class="${ent - sai >= 0 ? 'pos' : 'neg'}">${money(Math.abs(ent - sai))}</b> (entradas menos saídas pagas).`);
+  if (semSaldoInicial) destaques.push(html`O caixa ainda não está confiável: falta o <a href="#/cadastros">saldo inicial</a> de alguma conta.`);
+
+  const trocaMes = n => { st.mes = addMonths(mes, n); store.set('fin_painel', st); viewPainel(); };
   view().innerHTML = html`
-    <div class="head"><div><h1>Painel</h1><p>${MESES[+mes.slice(5)-1]} de ${mes.slice(0,4)} · atualizado agora</p></div>
-      ${isFin() ? html`<div class="row"><button class="btn" id="gerar">Gerar recorrências de ${brMonth(ini)}</button><a class="btn pri" href="#/pagar">Novo lançamento</a></div>` : ''}</div>
+    <div class="head"><div><div class="eyebrow">Visão da diretoria</div><h1>Resumo de ${MESES[+mes.slice(5) - 1]} de ${mes.slice(0, 4)}</h1>
+      <p>Entradas e saídas pagas no mês, comparadas com ${brMonth(ant)}. Transferências e aportes ficam fora.${mes === monthKey() ? html` <b style="color:var(--warn)">Mês em andamento: compare com cuidado.</b>` : ''}</p></div>
+      <div class="row"><button class="btn" id="mprev" title="Mês anterior">‹</button><input type="month" id="mes" value="${mes}" max="${monthKey()}"><button class="btn" id="mnext" title="Próximo mês"${mes >= monthKey() ? raw(' disabled') : ''}>›</button></div></div>
     <div class="kpis">
-      <div class="card kpi"><div class="l">A pagar no mês (em aberto)</div><div class="v neg">${money(sum(aberto,'pagar'))}</div><div class="s">já pago: ${money(fm.despesas_realizadas || 0)}</div></div>
-      <div class="card kpi"><div class="l">A receber no mês (em aberto)</div><div class="v pos">${money(sum(aberto,'receber'))}</div><div class="s">já recebido: ${money(fm.receitas_realizadas || 0)}</div></div>
-      <div class="card kpi"><div class="l">Atrasados</div><div class="v ${atrasados.length ? 'neg' : ''}">${atrasados.length}</div><div class="s">${money(sum(atrasados,'pagar'))} a pagar · ${money(sum(atrasados,'receber'))} a receber</div></div>
-      <div class="card kpi"><div class="l">NFs aguardando conferência</div><div class="v">${nfs.length}</div><div class="s">${money(sum(nfs))} · <a href="#/notas">conferir</a></div></div>
-      <div class="card kpi"><div class="l">Saldo nas contas</div><div class="v">${money(saldoTotal)}</div><div class="s">${saldos.some(s => s.tipo !== 'cartao' && !s.data_saldo_inicial) ? html`<a href="#/cadastros">defina o saldo inicial</a> para ficar correto` : 'contas correntes, pelo sistema'}</div></div>
-      <div class="card kpi"><div class="l">Extrato a conciliar</div><div class="v">${saldos.reduce((a, s) => a + (s.pendentes || 0), 0)}</div><div class="s">${saldos.filter(s => s.pendentes).map(s => s.nome).join(', ') || 'nada pendente'} · <a href="#/conciliacao">conciliar</a></div></div>
-      <div class="card kpi"><div class="l">Cartões em aberto</div><div class="v neg">${money(-saldos.filter(s => s.tipo === 'cartao').reduce((a, s) => a + Number(s.saldo_atual), 0))}</div><div class="s"><a href="#/cartoes">ver faturas</a></div></div>
+      <div class="card kpi"><div class="l">Entradas</div><div class="v pos">${valorKpi(ent)}</div><div class="s">${delta(ent, entA)} vs. ${brMonth(ant)}</div></div>
+      <div class="card kpi"><div class="l">Saídas</div><div class="v neg">${valorKpi(sai)}</div><div class="s">${delta(sai, saiA, { saida: true })} vs. ${brMonth(ant)}</div></div>
+      <div class="card kpi hl"><div class="l">Resultado de caixa</div><div class="v">${valorKpi(ent - sai)}</div><div class="s">${ent ? html`<span class="delta">${pct((ent - sai) / ent)} das entradas</span>` : 'sem entradas no mês'}</div></div>
+      <div class="card kpi"><div class="l">Caixa hoje</div><div class="v">${valorKpi(saldoTotal)}</div><div class="s">${semSaldoInicial ? html`<a href="#/cadastros">defina o saldo inicial</a> para ficar correto` : 'contas correntes'}</div></div>
     </div>
-    <div class="grid2">
-      <div class="card pad chart"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>Fluxo de caixa</h2>
-        <div class="legend"><span><i style="background:var(--pos)"></i>Entradas</span><span><i style="background:var(--neg)"></i>Saídas</span><span><i style="background:var(--ink-3);opacity:.35"></i>Previsto</span></div></div>
-        ${chartFluxo(fluxo, mes)}
-        <p class="small muted" style="margin:8px 0 0">Realizado pela data de pagamento; previsto pela data de vencimento. Transferências e aportes ficam fora.</p></div>
-      <div class="card pad"><h2 style="margin-bottom:6px">Próximos 10 dias</h2>
-        ${prox.length ? prox.map(l => html`<div class="list-item"><div><div>${l.descricao}</div><div class="small muted">${brDate(l.data_vencimento)}${l.fornecedor ? ' · ' + l.fornecedor : ''}${l.aguardando_nf ? html` · <span class="pill p-enviada">aguarda NF</span>` : ''}</div></div><div class="num ${l.tipo === 'pagar' ? 'neg' : 'pos'}">${l.tipo === 'pagar' ? '−' : '+'}${money(l.valor)}</div></div>`) : html`<div class="empty">Nada vencendo.</div>`}
+    <div class="tabs" id="ptabs">${[['geral', 'Visão geral'], ['resultado', 'Resultado'], ['caixa', 'Caixa'], ['operacao', 'Operação']].map(([k, l]) => html`<button data-t="${k}" class="${k === aba ? 'on' : ''}">${l}</button>`)}</div>
+    <div id="paba"></div>`.s;
+
+  const abas = {
+    geral: () => html`
+      <div class="grid2">
+        <div class="card"><div class="band"><h2>Entradas × saídas</h2><div class="legend"><span><i style="background:var(--pos)"></i>Entradas</span><span><i style="background:var(--neg)"></i>Saídas</span><span><i style="background:var(--brand)"></i>Resultado</span></div></div>
+          <div class="chart-wrap">${chartEntSai(fluxo, mes)}</div></div>
+        <div class="card"><div class="band"><h2>Composição das entradas</h2><span class="muted">${brMonth(ini)}</span></div>
+          ${entradasCat.length ? donut(entradasCat, ['--pos', '--brand-2', '--sage', '--sand', '--pos-2', '--terra']) : html`<div class="empty">Nenhuma entrada paga neste mês.</div>`}</div>
       </div>
-    </div>`.s;
+      ${destaques.length ? html`<div class="card pad destaques"><b>Destaques de ${brMonth(ini)}</b><ul>${destaques.map(d => html`<li>${d}</li>`)}</ul></div>` : ''}`,
+    resultado: () => html`
+      <div class="grid2">
+        <div class="card"><div class="band"><h2>Das entradas ao resultado</h2><span class="muted">${brMonth(ini)} · competência</span></div>
+          <div class="chart-wrap">${cascata(resMes)}</div></div>
+        <div class="card"><div class="band"><h2>Para onde foi o dinheiro</h2><span class="muted">saídas de ${brMonth(ini)}</span></div>
+          ${saidasGrupo.length ? donut(saidasGrupo, ['--neg', '--terra', '--sand', '--sage', '--sage-2', '--neg-2', '--pos-2', '--brand-2', '--line-2']) : html`<div class="empty">Nenhuma saída paga neste mês.</div>`}</div>
+      </div>
+      <p class="small muted">O demonstrativo completo, linha a linha, está em <a href="#/relatorios">Demonstrativo (DRE)</a>.</p>`,
+    caixa: () => html`<div class="card"><div class="band"><h2>Caixa · próximos 90 dias</h2><span class="muted">saldo de hoje + contas previstas pelo vencimento</span></div><div class="chart-wrap" id="proj"><div class="empty">Calculando…</div></div></div>`,
+    operacao: () => html`<div id="oper"><div class="empty">Carregando…</div></div>`,
+  };
+  const abrir = async k => {
+    st.aba = k; store.set('fin_painel', st);
+    $$('#ptabs button').forEach(b => b.classList.toggle('on', b.dataset.t === k));
+    $('#paba').innerHTML = abas[k]().s;
+    if (k === 'caixa') await projecaoCaixa(saldoTotal, semSaldoInicial);
+    if (k === 'operacao') await painelOperacao(mes);
+  };
+  $$('#ptabs button').forEach(b => b.onclick = () => abrir(b.dataset.t));
+  $('#mprev').onclick = () => trocaMes(-1);
+  $('#mnext').onclick = () => trocaMes(1);
+  $('#mes').onchange = e => { if (e.target.value) { st.mes = e.target.value; store.set('fin_painel', st); viewPainel(); } };
+  await abrir(aba);
+}
+
+// rosca + legenda. itens = [[nome, valor], ...]; mostra no máximo 6 fatias (o resto vira "Outros")
+function donut(itens, cores){
+  let lista = itens.slice(0, 6);
+  if (itens.length > 6) lista = [...itens.slice(0, 5), ['Outros', itens.slice(5).reduce((a, x) => a + x[1], 0)]];
+  const total = lista.reduce((a, x) => a + x[1], 0), r = 44, c = 2 * Math.PI * r;
+  let off = 0, s = `<svg class="donut" viewBox="0 0 120 120" role="img" aria-label="Distribuição">`;
+  lista.forEach(([n, v], i) => { const len = v / total * c; s += `<circle cx="60" cy="60" r="${r}" fill="none" stroke="var(${cores[i % cores.length]})" stroke-width="20" stroke-dasharray="${len} ${c - len}" stroke-dashoffset="${-off}" transform="rotate(-90 60 60)"><title>${esc(n)}: ${esc(money(v))}</title></circle>`; off += len; });
+  const tc = fmtCompacto(total);
+  s += `<text x="60" y="56" text-anchor="middle" font-size="9" fill="var(--ink-3)">total</text><text x="60" y="71" text-anchor="middle" font-size="13" font-weight="800" fill="var(--ink)">${esc(tc.n.replace('R$ ', ''))} ${tc.u}</text></svg>`;
+  const curto = v => { const c = fmtCompacto(v); return c.n.replace('R$ ', '') + (c.u ? ' ' + c.u : ''); };
+  return html`<div class="donut-wrap">${raw(s)}<div class="lg">${lista.map(([n, v], i) => html`<div><i style="background:var(${cores[i % cores.length]})"></i><span title="${n}">${n}</span><span class="num" title="${money(v)}">${curto(v)}</span><span class="p">${pct(v / total, 0)}</span></div>`)}
+    <div class="tot"><i></i><span>Total</span><span class="num" title="${money(total)}">${curto(total)}</span><span class="p"></span></div></div></div>`;
+}
+
+// barras de entradas e saídas (12 meses + 3 previstos) com a linha do resultado
+function chartEntSai(rows, atual){
+  const meses = []; for (let i = -11; i <= 3; i++) meses.push(addMonths(atual, i));
+  const d = meses.map(m => { const r = rows.find(x => x.mes === firstDay(m)) || {}; const fut = m > monthKey(); return { m, fut, e: fut ? +r.receitas_previstas || 0 : +r.receitas_realizadas || 0, s: fut ? +r.despesas_previstas || 0 : +r.despesas_realizadas || 0 }; })
+    .filter((x, i, arr) => x.e || x.s || x.m === atual || arr.slice(0, i).some(y => y.e || y.s));
+  const W = 680, H = 260, L = 50, R = 8, T = 12, B = 222, max = Math.max(1, ...d.map(x => Math.max(x.e, x.s)));
+  const y = v => B - Math.max(0, v) / max * (B - T), step = (W - L - R) / d.length, bw = Math.min(20, step * .32);
+  const fmtK = v => v >= 1e6 ? (v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi' : v >= 1e3 ? Math.round(v / 1e3) + ' mil' : Math.round(v);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Entradas e saídas por mês">`;
+  [0, .25, .5, .75, 1].forEach(t => s += `<line x1="${L}" x2="${W - R}" y1="${y(max * t)}" y2="${y(max * t)}" stroke="var(--line)"/><text x="${L - 8}" y="${y(max * t) + 4}" text-anchor="end" font-size="10.5" fill="var(--ink-3)">${fmtK(max * t)}</text>`);
+  d.forEach((x, i) => {
+    const cx = L + step * i + step / 2, on = x.m === atual, op = x.fut ? .35 : on ? 1 : .55;
+    s += `<rect x="${cx - bw - 1.5}" y="${y(x.e)}" width="${bw}" height="${B - y(x.e)}" rx="3" fill="var(--pos)" opacity="${op}"><title>${esc(brMonth(firstDay(x.m)))} · entradas ${x.fut ? 'previstas' : ''}: ${esc(money(x.e))}</title></rect>`;
+    s += `<rect x="${cx + 1.5}" y="${y(x.s)}" width="${bw}" height="${B - y(x.s)}" rx="3" fill="var(--neg)" opacity="${op}"><title>${esc(brMonth(firstDay(x.m)))} · saídas ${x.fut ? 'previstas' : ''}: ${esc(money(x.s))}</title></rect>`;
+    s += `<text x="${cx}" y="${B + 18}" text-anchor="middle" font-size="11" fill="var(${on ? '--ink' : '--ink-3'})" font-weight="${on ? 700 : 400}">${esc(brMonth(firstDay(x.m)).slice(0, 3))}</text>`;
+  });
+  const real = d.map((x, i) => [i, x]).filter(([, x]) => !x.fut);
+  if (real.length > 1) {
+    s += `<path d="${real.map(([i, x], k) => `${k ? 'L' : 'M'}${L + step * i + step / 2},${y(x.e - x.s)}`).join(' ')}" fill="none" stroke="var(--brand)" stroke-width="2.2" stroke-linejoin="round"/>`;
+    real.forEach(([i, x]) => s += `<circle cx="${L + step * i + step / 2}" cy="${y(x.e - x.s)}" r="${x.m === atual ? 4.5 : 3}" fill="var(--surface)" stroke="var(--brand)" stroke-width="2"><title>${esc(brMonth(firstDay(x.m)))} · resultado: ${esc(money(x.e - x.s))}</title></circle>`);
+  }
+  return raw(s + '</svg>');
+}
+
+// cascata por competência: entradas → cada grupo de despesa → resultado
+function cascata(resMes){
+  const ent = resMes.filter(r => r.tipo === 'receber').reduce((a, r) => a + Number(r.realizado || 0), 0);
+  if (!ent) return html`<div class="empty">Sem receitas com competência neste mês.</div>`;
+  const grupos = somaPor(resMes.filter(r => r.tipo === 'pagar'), 'grupo');
+  const lista = grupos.length > 6 ? [...grupos.slice(0, 5), ['Outros', grupos.slice(5).reduce((a, x) => a + x[1], 0)]] : grupos;
+  const passos = [['Receitas', ent, 'ini'], ...lista.map(([g, v]) => [g, -v]), ['Resultado', ent - grupos.reduce((a, x) => a + x[1], 0), 'fim']];
+  const W = 760, L = 10, T = 22, B = 236, bw = Math.min(64, (W - 2 * L) / passos.length * .62), gap = (W - 2 * L - bw * passos.length) / (passos.length - 1);
+  const topo = Math.max(ent, 1), base = Math.min(0, passos[passos.length - 1][1]);
+  const y = v => T + (topo - v) / (topo - base) * (B - T);
+  let acc = 0, s = `<svg viewBox="0 0 ${W} ${B + 44}" role="img" aria-label="Das entradas ao resultado">`;
+  s += `<line x1="${L}" x2="${W - L}" y1="${y(0)}" y2="${y(0)}" stroke="var(--line-2)"/>`;
+  passos.forEach(([n, v, k], i) => {
+    const x = L + i * (bw + gap); let y0, y1, cor;
+    if (k === 'ini') { y0 = y(v); y1 = y(0); acc = v; cor = '--pos'; }
+    else if (k === 'fim') { y0 = y(Math.max(v, 0)); y1 = y(Math.min(v, 0)); cor = v >= 0 ? '--brand' : '--neg'; }
+    else { const a = acc; acc += v; y0 = y(Math.max(a, acc)); y1 = y(Math.min(a, acc)); cor = '--neg'; }
+    s += `<rect x="${x}" y="${y0}" width="${bw}" height="${Math.max(2, y1 - y0)}" rx="5" fill="var(${cor})" opacity="${k ? 1 : .85}"><title>${esc(n)}: ${esc(money(v))}</title></rect>`;
+    const c = fmtCompacto(v);
+    s += `<text x="${x + bw / 2}" y="${y0 - 7}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(${k ? '--ink' : '--neg'})">${esc(c.n.replace('R$ ', ''))}${c.u ? ' ' + c.u : ''}</text>`;
+    const partes = String(n).length > 12 ? [String(n).slice(0, String(n).lastIndexOf(' ', 12) > 0 ? String(n).lastIndexOf(' ', 12) : 12), String(n).slice((String(n).lastIndexOf(' ', 12) > 0 ? String(n).lastIndexOf(' ', 12) : 12)).trim()] : [n];
+    partes.forEach((p, j) => s += `<text x="${x + bw / 2}" y="${B + 18 + j * 13}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${esc(p.length > 14 ? p.slice(0, 13) + '…' : p)}</text>`);
+  });
+  return raw(s + '</svg>');
+}
+
+// saldo de hoje + o que vence nos próximos 90 dias (lançamentos em aberto e faturas de cartão)
+async function projecaoCaixa(saldo, semSaldoInicial){
+  const hoje = today(), fim = iso(new Date(Date.now() + 90 * 864e5));
+  const [lancs, fats] = await Promise.all([
+    q(sb.from('vw_lancamentos').select('tipo,valor,data_vencimento,categoria_tipo').in('status', ['previsto', 'aprovado']).is('fatura_id', null).gte('data_vencimento', hoje).lte('data_vencimento', fim).limit(5000)),
+    q(sb.from('vw_faturas').select('total,data_vencimento').neq('status', 'paga').gte('data_vencimento', hoje).lte('data_vencimento', fim)).catch(() => []),
+  ]);
+  const mov = {};
+  lancs.filter(l => l.categoria_tipo !== 'neutra').forEach(l => mov[l.data_vencimento] = (mov[l.data_vencimento] || 0) + (l.tipo === 'receber' ? 1 : -1) * Number(l.valor));
+  fats.forEach(f => mov[f.data_vencimento] = (mov[f.data_vencimento] || 0) - Number(f.total));
+  const pts = []; let s = saldo, min = { v: saldo, d: hoje };
+  for (let i = 0; i <= 90; i++) { const d = iso(new Date(Date.now() + i * 864e5)); s += mov[d] || 0; pts.push([d, s]); if (s < min.v) min = { v: s, d }; }
+  const W = 680, H = 250, L = 56, R = 10, T = 12, B = 214;
+  const lo = Math.min(0, ...pts.map(p => p[1])), hi = Math.max(1, ...pts.map(p => p[1]));
+  const x = i => L + i / 90 * (W - L - R), y = v => B - (v - lo) / (hi - lo) * (B - T);
+  const fmtK = v => { const c = fmtCompacto(v); return c.n.replace('R$ ', '') + (c.u ? ' ' + c.u : ''); };
+  let o = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Projeção de caixa">`;
+  [0, .25, .5, .75, 1].forEach(t => { const v = lo + (hi - lo) * t; o += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L - 8}" y="${y(v) + 4}" text-anchor="end" font-size="10.5" fill="var(--ink-3)">${esc(fmtK(v))}</text>`; });
+  if (lo < 0) o += `<rect x="${L}" y="${y(0)}" width="${W - L - R}" height="${B - y(0)}" fill="var(--neg-soft)"/><line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--neg)" stroke-dasharray="4 4"/>`;
+  const dd = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i)},${y(p[1])}`).join(' ');
+  o += `<path d="${dd} L${x(90)},${B} L${x(0)},${B} Z" fill="var(--brand)" opacity=".1"/><path d="${dd}" fill="none" stroke="var(--brand)" stroke-width="2.2" stroke-linejoin="round"/>`;
+  const im = pts.findIndex(p => p[0] === min.d);
+  o += `<circle cx="${x(im)}" cy="${y(min.v)}" r="5" fill="var(--surface)" stroke="var(${min.v < 0 ? '--neg' : '--warn'})" stroke-width="2.5"><title>menor saldo: ${esc(money(min.v))} em ${esc(brDate(min.d))}</title></circle>`;
+  [0, 30, 60, 90].forEach(i => o += `<text x="${x(i)}" y="${B + 20}" text-anchor="${i === 0 ? 'start' : i === 90 ? 'end' : 'middle'}" font-size="11" fill="var(--ink-3)">${esc(brDate(pts[i][0]).slice(0, 5))}</text>`);
+  $('#proj').innerHTML = o + '</svg>';
+  $('#proj').insertAdjacentHTML('afterend', html`<div class="note${min.v < 0 ? ' neg' : ''}" style="margin:0 20px 18px">${semSaldoInicial ? html`<b>Atenção:</b> sem o saldo inicial das contas, o ponto de partida está errado. ` : ''}Menor saldo previsto: <b>${money(min.v)}</b> em ${brDate(min.d)}. Considera só o que já está lançado como previsto ou aprovado — gere as contas fixas dos próximos meses para a projeção ficar completa.</div>`.s);
+}
+
+// a antiga visão operacional: o que precisa de ação agora
+async function painelOperacao(mes){
+  const ini = firstDay(mes), fim = lastDay(mes), hoje = today(), em10 = iso(new Date(Date.now() + 10 * 864e5));
+  const [aberto, atrasados, prox, saldos, nfs] = await Promise.all([
+    q(sb.from('vw_lancamentos').select('tipo,valor').in('status', ['previsto', 'aprovado']).gte('data_vencimento', ini).lte('data_vencimento', fim)),
+    q(sb.from('vw_lancamentos').select('tipo,valor').eq('situacao', 'atrasado')),
+    q(sb.from('vw_lancamentos').select('id,tipo,descricao,valor,data_vencimento,fornecedor,situacao,aguardando_nf').in('status', ['previsto', 'aprovado']).is('fatura_id', null).gte('data_vencimento', hoje).lte('data_vencimento', em10).order('data_vencimento').limit(10)),
+    q(sb.from('vw_saldo_contas').select('*')),
+    q(sb.from('notas_fiscais').select('valor').eq('status', 'enviada')),
+  ]);
+  const fatsProx = await q(sb.from('vw_faturas').select('cartao,total,data_vencimento').neq('status', 'paga').gte('data_vencimento', hoje).lte('data_vencimento', em10)).catch(() => []);
+  prox.push(...fatsProx.filter(f => Number(f.total) > 0).map(f => ({ tipo: 'pagar', descricao: `Fatura ${f.cartao}`, valor: f.total, data_vencimento: f.data_vencimento })));
+  prox.sort((a, b) => a.data_vencimento.localeCompare(b.data_vencimento));
+  const sum = (arr, t) => arr.filter(x => !t || x.tipo === t).reduce((a, x) => a + Number(x.valor), 0);
+  const pend = saldos.reduce((a, s) => a + (s.pendentes || 0), 0), cartoes = -saldos.filter(s => s.tipo === 'cartao').reduce((a, s) => a + Number(s.saldo_atual), 0);
+  // só mostra o que pede ação; o que está zerado vira uma linha de "em dia"
+  const itens = [
+    [sum(aberto, 'pagar'), html`<div class="card kpi"><div class="l">A pagar em ${brMonth(ini)}</div><div class="v neg">${valorKpi(sum(aberto, 'pagar'))}</div><div class="s">em aberto · <a href="#/pagar">ver</a></div></div>`, 'nada a pagar em aberto no mês'],
+    [sum(aberto, 'receber'), html`<div class="card kpi"><div class="l">A receber em ${brMonth(ini)}</div><div class="v pos">${valorKpi(sum(aberto, 'receber'))}</div><div class="s">em aberto · <a href="#/receber">ver</a></div></div>`, 'nada a receber em aberto no mês'],
+    [atrasados.length, html`<div class="card kpi"><div class="l">Atrasados</div><div class="v neg">${atrasados.length}</div><div class="s">${money(sum(atrasados, 'pagar'))} a pagar · ${money(sum(atrasados, 'receber'))} a receber</div></div>`, 'nenhum atrasado'],
+    [nfs.length, html`<div class="card kpi"><div class="l">NFs para conferir</div><div class="v">${nfs.length}</div><div class="s">${money(sum(nfs))} · <a href="#/notas">conferir</a></div></div>`, 'nenhuma NF esperando'],
+    [pend, html`<div class="card kpi"><div class="l">Extrato a conciliar</div><div class="v">${pend}</div><div class="s">${saldos.filter(s => s.pendentes).map(s => s.nome).join(', ')} · <a href="#/conciliacao">conciliar</a></div></div>`, 'extrato em dia'],
+    [cartoes, html`<div class="card kpi"><div class="l">Cartões em aberto</div><div class="v neg">${valorKpi(cartoes)}</div><div class="s"><a href="#/cartoes">ver faturas</a></div></div>`, 'nenhuma fatura em aberto'],
+  ];
+  const emDia = itens.filter(i => !i[0]).map(i => i[2]);
+  $('#oper').innerHTML = html`
+    ${isFin() ? html`<div class="row" style="justify-content:flex-end;margin-bottom:14px"><button class="btn" id="gerar">Gerar contas fixas de ${brMonth(ini)}</button><a class="btn pri" href="#/pagar">Novo lançamento</a></div>` : ''}
+    ${itens.some(i => i[0]) ? html`<div class="kpis">${itens.filter(i => i[0]).map(i => i[1])}</div>` : ''}
+    ${emDia.length ? html`<p class="small muted" style="margin:-4px 0 16px">✓ Em dia: ${emDia.join(' · ')}.</p>` : ''}
+    <div class="card"><div class="band"><h2>Próximos 10 dias</h2></div><div style="padding:4px 20px 8px">
+      ${prox.length ? prox.map(l => html`<div class="list-item"><div><div>${l.descricao}</div><div class="small muted">${brDate(l.data_vencimento)}${l.fornecedor ? ' · ' + l.fornecedor : ''}${l.aguardando_nf ? html` · <span class="pill p-enviada">aguarda NF</span>` : ''}</div></div><div class="num ${l.tipo === 'pagar' ? 'neg' : 'pos'}">${l.tipo === 'pagar' ? '−' : '+'}${money(l.valor)}</div></div>`) : html`<div class="empty">Nada vencendo nos próximos 10 dias.</div>`}
+    </div></div>`.s;
   $('#gerar')?.addEventListener('click', () => gerarRecorrencias(mes));
 }
 
 async function gerarRecorrencias(mes){
   try { const n = await q(sb.rpc('gerar_recorrencias', { p_mes: firstDay(mes) })); toast(n ? `${n} lançamentos gerados para ${brMonth(firstDay(mes))}.` : `Nada novo: ${brMonth(firstDay(mes))} já estava gerado.`); route(); }
   catch(e) { toast(errMsg(e), true); }
-}
-
-function chartFluxo(rows, atual){
-  const meses = []; for (let i = -5; i <= 3; i++) meses.push(addMonths(atual, i));
-  const data = meses.map(m => { const r = rows.find(x => x.mes === firstDay(m)) || {}; return { m, er:+r.receitas_realizadas||0, sr:+r.despesas_realizadas||0, ep:+r.receitas_previstas||0, sp:+r.despesas_previstas||0 }; });
-  const max = Math.max(1, ...data.map(d => Math.max(d.er+d.ep, d.sr+d.sp)));
-  const W = 640, H = 240, pl = 58, pb = 28, pt = 10, cw = (W - pl) / data.length, bw = Math.min(22, cw/3);
-  const y = v => pt + (H - pt - pb) * (1 - v / max);
-  const fmtK = v => v >= 1e6 ? (v/1e6).toFixed(1).replace('.',',') + ' mi' : v >= 1e3 ? Math.round(v/1e3) + ' mil' : Math.round(v);
-  const ticks = [0, .25, .5, .75, 1].map(t => max * t);
-  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fluxo de caixa mensal">`;
-  ticks.forEach(t => { s += `<line x1="${pl}" x2="${W}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${pl-8}" y="${y(t)+4}" text-anchor="end" font-size="10" fill="var(--ink-3)">${fmtK(t)}</text>`; });
-  data.forEach((d, i) => {
-    const cx = pl + cw * i + cw/2;
-    const bar = (x, real, prev, cor) => {
-      let o = ''; const y0 = y(0), yr = y(real), yp = y(real + prev);
-      if (real) o += `<rect x="${x}" y="${yr}" width="${bw}" height="${y0-yr}" rx="2" fill="${cor}"><title>${esc(brMonth(firstDay(d.m)))}: ${esc(money(real))} realizado</title></rect>`;
-      if (prev) o += `<rect x="${x}" y="${yp}" width="${bw}" height="${yr-yp}" rx="2" fill="${cor}" opacity=".35"><title>${esc(brMonth(firstDay(d.m)))}: ${esc(money(prev))} previsto</title></rect>`;
-      return o;
-    };
-    s += bar(cx - bw - 1, d.er, d.ep, 'var(--pos)') + bar(cx + 1, d.sr, d.sp, 'var(--neg)');
-    s += `<text x="${cx}" y="${H-8}" text-anchor="middle" font-size="11" fill="${d.m === atual ? 'var(--ink)' : 'var(--ink-3)'}" font-weight="${d.m === atual ? 600 : 400}">${brMonth(firstDay(d.m))}</text>`;
-  });
-  return raw(s + '</svg>');
 }
 
 // ---------------------------------------------------------- LANÇAMENTOS ----
@@ -1454,7 +1683,7 @@ async function importarFatura(cs, st, depois){
 }
 
 // inicia depois que tudo acima foi declarado
-if (!cfg?.url) renderConfig(); else boot();
+if (DEMO || cfg?.url) boot(); else renderConfig();
 </script>
 </body>
 </html>
