@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.vercel/
+public/config.js
+# dados reais da empresa (nomes, salários, pró-labore): nunca no git
+dados-privados/
+supabase/.temp/
+supabase/.branches/
+.DS_Store

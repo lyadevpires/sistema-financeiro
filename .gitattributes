@@ -1,0 +1,5 @@
+# Quebra de linha LF no repositório; scripts bash sempre LF também na cópia local (senão o bash quebra com \r)
+* text=auto eol=lf
+*.sh text eol=lf
+*.xlsx binary
+*.pdf binary

@@ -1,0 +1,13 @@
+{
+  "name": "sistema-financeiro",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node scripts/gerar-config.mjs",
+    "dev": "node scripts/gerar-config.mjs && npx --yes serve public -l 3000",
+    "test": "npm run test:parser",
+    "test:parser": "node --test tests/parser.test.mjs",
+    "test:db": "bash tests/db/run.sh"
+  }
+}

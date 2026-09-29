@@ -1,0 +1,1460 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Financeiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* entradas = azul (--pos), saídas = vermelho (--neg), marca = violeta, sucesso = verde (--ok) */
+  --bg:#F4F5FB; --surface:#FFFFFF; --surface-2:#EEF0F8; --ink:#141527; --ink-2:#44476A; --ink-3:#74789C;
+  --line:#E1E3EF; --brand:#6D28D9; --brand-ink:#FFFFFF; --brand-soft:#EDE4FF;
+  --pos:#1463F3; --pos-soft:#E1EBFF; --neg:#E11D48; --neg-soft:#FFE1E7; --ok:#0E9F6E; --ok-soft:#DCF7EC;
+  --warn:#D97706; --warn-soft:#FEF0D7; --info:#6D28D9; --info-soft:#EDE4FF;
+  --side:#1B1340; --side-2:#2A1F5C; --side-ink:#F1EEFF; --side-ink-2:#A89FD8;
+  --shadow:0 1px 2px rgba(20,21,39,.05),0 8px 24px rgba(20,21,39,.06);
+  --r:10px; --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1020; --surface:#181A2E; --surface-2:#20233B; --ink:#EEF0FF; --ink-2:#B7BBDD; --ink-3:#8488AC;
+  --line:#2C2F4A; --brand:#A78BFA; --brand-ink:#140A33; --brand-soft:#2B2050;
+  --pos:#5B9BFF; --pos-soft:#16264A; --neg:#FF5C7A; --neg-soft:#401622; --ok:#34D399; --ok-soft:#10332A;
+  --warn:#FBBF24; --warn-soft:#3A2B0B; --info:#A78BFA; --info-soft:#2B2050;
+  --side:#0B0B18; --side-2:#1E1A3A; --side-ink:#EEF0FF; --side-ink-2:#8F89BF;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0F1020; --surface:#181A2E; --surface-2:#20233B; --ink:#EEF0FF; --ink-2:#B7BBDD; --ink-3:#8488AC;
+  --line:#2C2F4A; --brand:#A78BFA; --brand-ink:#140A33; --brand-soft:#2B2050;
+  --pos:#5B9BFF; --pos-soft:#16264A; --neg:#FF5C7A; --neg-soft:#401622; --ok:#34D399; --ok-soft:#10332A;
+  --warn:#FBBF24; --warn-soft:#3A2B0B; --info:#A78BFA; --info-soft:#2B2050;
+  --side:#0B0B18; --side-2:#1E1A3A; --side-ink:#EEF0FF; --side-ink-2:#8F89BF;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 var(--sans);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:-.01em;margin:0}
+h1{font-size:28px} h2{font-size:19px} h3{font-size:15px;font-family:var(--sans)}
+a{color:var(--brand)}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.muted{color:var(--ink-3)} .small{font-size:12px}
+.pos{color:var(--pos)} .neg{color:var(--neg)} .ok{color:var(--ok)}
+.app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+.side{background:var(--side);color:var(--side-ink);border-right:0;padding:22px 14px;position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.brand{font-family:var(--serif);font-size:20px;padding:0 10px 18px}
+.brand{color:var(--side-ink)} .brand small{display:block;font-family:var(--sans);font-size:11px;color:var(--side-ink-2);letter-spacing:.06em;text-transform:uppercase}
+.nav-sec{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--side-ink-2);padding:14px 10px 4px}
+.nav a{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:8px;text-decoration:none;color:var(--side-ink);opacity:.86}
+.nav a:hover{background:var(--side-2);opacity:1} .nav a.on{background:var(--brand);color:#fff;opacity:1;font-weight:500}
+.badge{background:#FF7A1A;color:#fff;border-radius:99px;font-size:11px;padding:0 7px;font-weight:600}
+.side-foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid var(--side-2);font-size:12px;color:var(--side-ink-2)} .side-foot .muted{color:var(--side-ink-2)} .side-foot .linkbtn{color:var(--side-ink)}
+.main{padding:28px 32px 60px;min-width:0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.head p{margin:4px 0 0;color:var(--ink-3)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.card.pad{padding:18px 20px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:16px}
+.kpi{padding:16px 18px}
+.kpi .l{font-size:12px;color:var(--ink-3)} .kpi .v{font-family:var(--mono);font-size:clamp(16px,1.6vw,21px);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .s{font-size:12px;color:var(--ink-3);margin-top:2px}
+.grid2{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.btn{text-decoration:none;display:inline-flex;align-items:center;border:1px solid var(--line);background:var(--surface);padding:7px 13px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.pri{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)} .btn.pri:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--neg)} .btn.ok{color:var(--ok);border-color:var(--ok-soft)}
+.btn.sm{padding:3px 9px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:default}
+.linkbtn{background:none;border:0;color:var(--brand);cursor:pointer;padding:0;text-decoration:underline}
+input,select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;min-width:0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+textarea{min-height:70px;resize:vertical;width:100%}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:8px 12px;cursor:pointer;color:var(--ink-3);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--ink);border-color:var(--brand);font-weight:500}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:500;font-size:12px;color:var(--ink-3);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+td.r,th.r{text-align:right}
+tfoot td{font-weight:600;border-top:1px solid var(--line)}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.p-previsto{background:var(--surface-2);color:var(--ink-2)} .p-aprovado{background:var(--brand-soft);color:var(--brand)}
+.p-pago,.p-paga{background:var(--ok-soft);color:var(--ok)} .p-atrasado,.p-rejeitada{background:var(--neg-soft);color:var(--neg)}
+.p-cancelado{background:var(--surface-2);color:var(--ink-3);text-decoration:line-through}
+.p-enviada{background:var(--warn-soft);color:var(--warn)} .p-aprovada{background:var(--brand-soft);color:var(--brand)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;padding:12px;border-bottom:1px solid var(--line)}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3)}
+.empty{padding:36px;text-align:center;color:var(--ink-3)}
+.modal-bg{position:fixed;inset:0;background:rgba(15,22,20,.45);display:flex;align-items:flex-start;justify-content:center;padding:5vh 16px;z-index:50;overflow:auto}
+.modal{background:var(--surface);border-radius:14px;width:min(640px,100%);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal .body{padding:18px 22px;display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.modal footer{padding:14px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+.f{display:flex;flex-direction:column;gap:4px} .f.full{grid-column:1/-1}
+.f label{font-size:12px;color:var(--ink-2);font-weight:500} .f .hint{font-size:11px;color:var(--ink-3)}
+.f input,.f select{width:100%}
+.chk{flex-direction:row;align-items:center;gap:8px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:60;box-shadow:var(--shadow);max-width:90vw}
+.toast.err{background:var(--neg);color:#fff}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--brand)} .bar > i.over{background:var(--neg)}
+.list-item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.list-item:last-child{border-bottom:0}
+.note{background:var(--warn-soft);color:var(--ink);border-radius:8px;padding:10px 12px;font-size:13px}
+.note.info{background:var(--info-soft)} .note.neg{background:var(--neg-soft)}
+.auth{min-height:100vh;display:grid;place-items:center;padding:24px}
+.auth .card{width:min(400px,100%);padding:28px}
+.auth form{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.auth input{width:100%}
+.steps{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
+.steps span.on{color:var(--ink);font-weight:600}
+.dre td:first-child{white-space:nowrap} .dre tr.grp td{background:var(--surface-2);font-weight:600}
+.dre tr.tot td{font-weight:700;border-top:2px solid var(--line)}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--ink-3);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.portal{max-width:880px;margin:0 auto;padding:28px 16px 60px}
+.nf-item{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.nf-item:last-child{border-bottom:0}
+.menu-btn{display:none}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:260px;z-index:40;transform:translateX(-100%);transition:transform .2s}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex}
+  .main{padding:18px 16px 60px}
+  .grid2{grid-template-columns:1fr}
+  .modal .body{grid-template-columns:1fr}
+  h1{font-size:23px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="/config.js"></script>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { semAcento, parseNum, parseData, parseCSV, PULAR, tabelaParaExtrato, chavesExtrato } from './js/extrato-parser.js';
+
+// ============================================================================
+// CONFIGURAÇÃO — vem de /config.js, gerado no build a partir das variáveis de
+// ambiente SUPABASE_URL e SUPABASE_ANON_KEY (scripts/gerar-config.mjs).
+// A anon key é pública por natureza: quem protege os dados é o RLS.
+// Sem config.js (rodando local sem build), a tela pede os dados.
+// ============================================================================
+const CONFIG = window.__FIN_CONFIG || { url: '', anonKey: '' };
+
+// ----------------------------------------------------------------------------
+// utilidades
+// ----------------------------------------------------------------------------
+const store = {
+  get(k){ try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+};
+class Raw { constructor(s){ this.s = s; } }
+const raw = s => new Raw(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const val = v => v instanceof Raw ? v.s : Array.isArray(v) ? v.map(val).join('') : (v == null || v === false) ? '' : esc(v);
+// html`...` escapa tudo que é interpolado. Texto digitado por PJs externos
+// (descrição da NF, nome do arquivo) nunca vira HTML executável aqui dentro.
+function html(strings, ...vals){ let o = ''; strings.forEach((s,i) => { o += s; if (i < vals.length) o += val(vals[i]); }); return raw(o); }
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+
+const BRL = new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL' });
+const money = v => v == null || v === '' ? '—' : BRL.format(Number(v));
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = () => iso(new Date());
+const monthKey = (d=new Date()) => `${d.getFullYear()}-${pad(d.getMonth()+1)}`;
+const addMonths = (ym, n) => { const [y,m] = ym.split('-').map(Number); const d = new Date(y, m-1+n, 1); return monthKey(d); };
+const firstDay = ym => `${ym}-01`;
+const lastDay = ym => { const [y,m] = ym.split('-').map(Number); return iso(new Date(y, m, 0)); };
+const brDate = s => s ? s.slice(0,10).split('-').reverse().join('/') : '—';
+const MESES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const brMonth = s => { if(!s) return '—'; const [y,m] = s.slice(0,7).split('-'); return `${MESES[+m-1]}/${y.slice(2)}`; };
+const parseMoney = s => { if (s == null) return null; s = String(s).trim().replace(/[R$\s]/g,''); if (!s) return null; if (s.includes(',')) s = s.replace(/\./g,'').replace(',','.'); const n = Number(s); return isNaN(n) ? NaN : n; };
+const moneyInput = v => v == null || v === '' ? '' : Number(v).toFixed(2).replace('.',',');
+
+function toast(msg, err=false){
+  const t = document.createElement('div'); t.className = 'toast' + (err ? ' err' : ''); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), err ? 6000 : 3000);
+}
+function errMsg(e){
+  const m = e?.message || String(e);
+  if (/duplicate key.*nf_numero_uk/.test(m)) return 'Já existe uma nota com esse número para este fornecedor.';
+  if (/duplicate key.*fornecedores_email_uk/.test(m)) return 'Esse e-mail já está em outro cadastro.';
+  if (/duplicate key/.test(m)) return 'Já existe um registro com esses dados.';
+  if (/row-level security/.test(m)) return 'Seu perfil não tem permissão para isso.';
+  if (/Invalid login credentials/.test(m)) return 'E-mail ou senha incorretos.';
+  if (/Email not confirmed/.test(m)) return 'Confirme seu e-mail pelo link que enviamos antes de entrar.';
+  return m;
+}
+async function q(promise){ const { data, error, count } = await promise; if (error) throw error; return count != null ? { data, count } : data; }
+
+// ----------------------------------------------------------------------------
+// conexão
+// ----------------------------------------------------------------------------
+const cfg = CONFIG.url ? CONFIG : store.get('fin_cfg');
+const root = $('#root');
+
+function renderConfig(){
+  root.innerHTML = html`<div class="auth"><div class="card">
+    <h1>Conectar ao Supabase</h1>
+    <p class="muted">Cole a URL e a anon key do projeto (Project Settings → API). Para publicar para a equipe e PJs, preencha a constante CONFIG no topo do arquivo em vez de usar esta tela.</p>
+    <form id="cf"><input name="url" placeholder="https://xxxx.supabase.co" required>
+    <input name="key" placeholder="anon key (eyJ...)" required>
+    <button class="btn pri">Salvar e continuar</button></form></div></div>`.s;
+  $('#cf').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target);
+    store.set('fin_cfg', { url: f.get('url').trim(), anonKey: f.get('key').trim() }); location.reload(); };
+}
+
+let sb;
+const S = { session:null, perfil:null, fornecedor:null, params:null, lk:{}, recovery:false };
+const isFin = () => ['admin','financeiro'].includes(S.perfil?.papel);
+const isAdmin = () => S.perfil?.papel === 'admin';
+const isInterno = () => ['admin','financeiro','leitura'].includes(S.perfil?.papel);
+
+async function boot(){
+  sb = createClient(cfg.url, cfg.anonKey);
+  sb.auth.onAuthStateChange((ev, session) => {
+    if (ev === 'PASSWORD_RECOVERY') { S.recovery = true; renderAuth('nova-senha'); return; }
+    if (ev === 'SIGNED_OUT') { S.session = null; S.perfil = null; renderAuth('entrar'); }
+  });
+  const { data } = await sb.auth.getSession();
+  if (data.session && !location.hash.includes('type=recovery')) await afterLogin(data.session);
+  else if (!location.hash.includes('type=recovery')) renderAuth('entrar');
+}
+
+async function afterLogin(session){
+  S.session = session;
+  try {
+    S.perfil = (await q(sb.from('perfis').select('*').eq('id', session.user.id).maybeSingle()));
+    S.params = (await q(sb.from('parametros').select('*').maybeSingle())) || {};
+    if (!S.perfil) throw new Error('Perfil não encontrado. O 01-schema.sql foi executado?');
+    if (isInterno()) { await loadLookups(); window.onhashchange = route; route(); }
+    else { S.fornecedor = S.perfil.fornecedor_id ? await q(sb.from('fornecedores').select('*').eq('id', S.perfil.fornecedor_id).maybeSingle()) : null; renderPortal(); }
+  } catch(e) { root.innerHTML = html`<div class="auth"><div class="card"><h2>Erro ao carregar</h2><p>${errMsg(e)}</p><button class="btn" id="out">Sair</button></div></div>`.s; $('#out').onclick = () => sb.auth.signOut(); }
+}
+
+async function loadLookups(){
+  const [cat, cc, ct, fo, pr, rg] = await Promise.all([
+    q(sb.from('categorias').select('*').order('nome')),
+    q(sb.from('centros_custo').select('*').order('nome')),
+    q(sb.from('contas_bancarias').select('*').order('nome')),
+    q(sb.from('fornecedores').select('*').order('nome')),
+    q(sb.from('projetos').select('*').order('nome')),
+    q(sb.from('regras_classificacao').select('*').order('padrao')),
+  ]);
+  Object.assign(S.lk, { categorias:cat, centros:cc, contas:ct, fornecedores:fo, projetos:pr, regras:rg });
+}
+const opts = (list, filter=()=>true) => list.filter(filter).map(x => ({ value:x.id, label:x.nome + (x.ativo === false ? ' (inativo)' : '') }));
+
+// ----------------------------------------------------------------------------
+// login / criar acesso / recuperar senha
+// ----------------------------------------------------------------------------
+function renderAuth(modo){
+  const titulos = { entrar:'Entrar', criar:'Criar acesso', esqueci:'Recuperar senha', 'nova-senha':'Definir nova senha' };
+  root.innerHTML = html`<div class="auth"><div class="card">
+    <div class="small muted" style="letter-spacing:.06em;text-transform:uppercase">Financeiro</div>
+    <h1>${titulos[modo]}</h1>
+    ${modo === 'criar' ? html`<p class="muted small">Prestador PJ: use o mesmo e-mail que você passou para o financeiro — é ele que libera o envio das suas notas.</p>` : ''}
+    <form id="af">
+      ${modo === 'criar' ? html`<input name="nome" placeholder="Seu nome" required autocomplete="name">` : ''}
+      ${modo !== 'nova-senha' ? html`<input name="email" type="email" placeholder="E-mail" required autocomplete="email">` : ''}
+      ${modo !== 'esqueci' ? html`<input name="senha" type="password" placeholder="${modo === 'entrar' ? 'Senha' : 'Senha (mín. 8 caracteres)'}" required minlength="${modo === 'entrar' ? 1 : 8}" autocomplete="${modo === 'entrar' ? 'current-password' : 'new-password'}">` : ''}
+      <button class="btn pri" type="submit">${titulos[modo]}</button>
+    </form>
+    <div class="row small" style="margin-top:14px;justify-content:space-between">
+      ${modo === 'entrar' ? html`<button class="linkbtn" data-m="criar">Criar acesso</button><button class="linkbtn" data-m="esqueci">Esqueci a senha</button>` : html`<button class="linkbtn" data-m="entrar">Voltar para o login</button>`}
+    </div></div></div>`.s;
+  $$('[data-m]').forEach(b => b.onclick = () => renderAuth(b.dataset.m));
+  $('#af').onsubmit = async e => {
+    e.preventDefault(); const f = Object.fromEntries(new FormData(e.target)); const btn = $('button[type=submit]', e.target); btn.disabled = true;
+    try {
+      if (modo === 'entrar') { const { data, error } = await sb.auth.signInWithPassword({ email:f.email, password:f.senha }); if (error) throw error; await afterLogin(data.session); }
+      if (modo === 'criar') {
+        const { data, error } = await sb.auth.signUp({ email:f.email, password:f.senha, options:{ data:{ nome:f.nome }, emailRedirectTo: location.origin + location.pathname } });
+        if (error) throw error;
+        if (data.session) await afterLogin(data.session);
+        else { toast('Enviamos um link de confirmação para o seu e-mail.'); renderAuth('entrar'); }
+      }
+      if (modo === 'esqueci') { const { error } = await sb.auth.resetPasswordForEmail(f.email, { redirectTo: location.origin + location.pathname }); if (error) throw error; toast('Se o e-mail existir, você vai receber um link para redefinir a senha.'); renderAuth('entrar'); }
+      if (modo === 'nova-senha') { const { data, error } = await sb.auth.updateUser({ password:f.senha }); if (error) throw error; history.replaceState(null,'',location.pathname); toast('Senha atualizada.'); const s = await sb.auth.getSession(); await afterLogin(s.data.session); }
+    } catch(err) { toast(errMsg(err), true); btn.disabled = false; }
+  };
+}
+
+// ----------------------------------------------------------------------------
+// modal de formulário genérico
+// field: {key,label,type,options,required,full,hint,onChange,min,accept}
+// ----------------------------------------------------------------------------
+function formModal({ title, fields, initial={}, saveLabel='Salvar', onSave, note }){
+  return new Promise(resolve => {
+    const bg = document.createElement('div'); bg.className = 'modal-bg';
+    const fieldHtml = f => {
+      const v = initial[f.key];
+      const req = f.required ? raw(' required') : '';
+      const id = 'f_' + f.key;
+      let input;
+      switch (f.type) {
+        case 'select': input = html`<select id="${id}" name="${f.key}"${req}><option value="">${f.placeholder || '—'}</option>${(typeof f.options === 'function' ? f.options(initial) : f.options).map(o => html`<option value="${o.value}"${String(o.value) === String(v ?? '') ? raw(' selected') : ''}>${o.label}</option>`)}</select>`; break;
+        case 'textarea': input = html`<textarea id="${id}" name="${f.key}"${req}>${v ?? ''}</textarea>`; break;
+        case 'bool': input = html`<input id="${id}" type="checkbox" name="${f.key}"${v ? raw(' checked') : ''}>`; break;
+        case 'money': input = html`<input id="${id}" name="${f.key}" inputmode="decimal" placeholder="0,00" value="${moneyInput(v)}"${req}>`; break;
+        case 'month': input = html`<input id="${id}" type="month" name="${f.key}" value="${v ? String(v).slice(0,7) : ''}"${req}>`; break;
+        case 'tags': input = html`<input id="${id}" name="${f.key}" value="${(v || []).join(', ')}" placeholder="PE - Master Fluxo, VE - 1/26">`; break;
+        case 'file': input = html`<input id="${id}" type="file" name="${f.key}" accept="${f.accept || ''}"${req}>`; break;
+        default: input = html`<input id="${id}" type="${f.type || 'text'}" name="${f.key}" value="${v ?? ''}"${f.min != null ? raw(` min="${f.min}"`) : ''}${f.max != null ? raw(` max="${f.max}"`) : ''}${req}>`;
+      }
+      return html`<div class="f${f.full || f.type === 'textarea' ? raw(' full') : ''}${f.type === 'bool' ? raw(' chk') : ''}">${f.type === 'bool' ? html`${input}<label for="${id}">${f.label}</label>` : html`<label for="${id}">${f.label}${f.required ? ' *' : ''}</label>${input}`}${f.hint ? html`<span class="hint">${f.hint}</span>` : ''}</div>`;
+    };
+    bg.innerHTML = html`<form class="modal" novalidate><header><h2>${title}</h2><button type="button" class="btn sm" data-x>Fechar</button></header>
+      <div class="body">${note ? html`<div class="f full note info">${note}</div>` : ''}${fields.map(fieldHtml)}</div>
+      <footer><button type="button" class="btn" data-x>Cancelar</button><button class="btn pri" type="submit">${saveLabel}</button></footer></form>`.s;
+    document.body.appendChild(bg);
+    const form = $('form', bg);
+    const close = r => { bg.remove(); resolve(r); };
+    $$('[data-x]', bg).forEach(b => b.onclick = () => close(null));
+    bg.addEventListener('mousedown', e => { if (e.target === bg) close(null); });
+    const read = () => {
+      const out = {};
+      for (const f of fields) {
+        const elx = form.elements[f.key]; if (!elx) continue;
+        let v = elx.value;
+        if (f.type === 'bool') v = elx.checked;
+        else if (f.type === 'money') v = parseMoney(v);
+        else if (f.type === 'number') v = v === '' ? null : Number(v);
+        else if (f.type === 'month') v = v ? v + '-01' : null;
+        else if (f.type === 'tags') v = v.split(',').map(s => s.trim()).filter(Boolean);
+        else if (f.type === 'file') v = elx.files[0] || null;
+        else v = v === '' ? null : v;
+        out[f.key] = v;
+      }
+      return out;
+    };
+    fields.filter(f => f.onChange).forEach(f => form.elements[f.key].addEventListener('change', () => f.onChange(read(), form)));
+    form.onsubmit = async e => {
+      e.preventDefault();
+      const data = read();
+      for (const f of fields) {
+        const v = data[f.key];
+        if (f.required && (v == null || v === '' || (Array.isArray(v) && !v.length))) return toast(`Preencha: ${f.label}`, true);
+        if (f.type === 'money' && Number.isNaN(v)) return toast(`Valor inválido em: ${f.label}`, true);
+      }
+      const btn = $('button[type=submit]', form); btn.disabled = true;
+      try { const r = onSave ? await onSave(data) : data; close(r ?? true); }
+      catch(err) { toast(errMsg(err), true); btn.disabled = false; }
+    };
+    setTimeout(() => form.querySelector('input:not([type=checkbox]),select,textarea')?.focus(), 30);
+  });
+}
+async function confirmar(title, text, label='Confirmar'){ return !!(await formModal({ title, fields:[], note:text, saveLabel:label })); }
+
+const pill = s => html`<span class="pill p-${s}">${{previsto:'previsto',aprovado:'aprovado',pago:'pago',atrasado:'atrasado',cancelado:'cancelado',enviada:'enviada',aprovada:'aprovada',rejeitada:'rejeitada',paga:'paga'}[s] || s}</span>`;
+
+// ============================================================================
+// PORTAL DO COLABORADOR (PJ)
+// ============================================================================
+async function renderPortal(){
+  const f = S.fornecedor, p = S.params || {};
+  const nome = S.perfil.nome || S.session.user.email;
+  root.innerHTML = html`<div class="portal">
+    <div class="head"><div><div class="small muted">Portal de notas fiscais</div><h1>Olá, ${nome.split(' ')[0]}</h1></div>
+      <button class="btn" id="sair">Sair</button></div>
+    ${!f ? html`<div class="card pad"><h2>Acesso ainda não liberado</h2>
+        <p>Seu login foi criado com <b>${S.session.user.email}</b>, mas esse e-mail ainda não está ligado ao seu cadastro de prestador.</p>
+        <p class="muted">Peça ao financeiro para cadastrar esse e-mail no seu registro. Assim que fizerem isso, recarregue esta página — não precisa criar outro acesso.</p>
+        <button class="btn" onclick="location.reload()">Recarregar</button></div>` : html`
+    <div class="card pad" style="margin-bottom:16px">
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div><h2>${f.nome}</h2><div class="muted small">${f.documento ? 'CNPJ/CPF ' + f.documento + ' · ' : ''}${f.chave_pix ? 'PIX cadastrado: ' + mascaraPix(f.chave_pix) : 'Sem chave PIX cadastrada — informe ao financeiro'}</div></div>
+        <button class="btn pri" id="nova">Enviar nota fiscal</button>
+      </div>
+      <div class="note info" style="margin-top:14px">${p.instrucoes_portal || ''} ${p.dia_limite_envio_nf ? html`<b>Prazo: até o dia ${p.dia_limite_envio_nf} de cada mês.</b>` : ''}</div>
+    </div>
+    <div class="card"><div class="filters"><h2 class="grow">Minhas notas</h2></div><div id="lista"><div class="empty">Carregando…</div></div></div>`}
+  </div>`.s;
+  $('#sair').onclick = () => sb.auth.signOut();
+  if (!f) return;
+  $('#nova').onclick = () => nfForm();
+  await portalLista();
+}
+const mascaraPix = k => k.length <= 6 ? '•••' : k.slice(0,3) + '•••' + k.slice(-3);
+
+async function portalLista(){
+  const box = $('#lista'); if (!box) return;
+  const rows = await q(sb.from('notas_fiscais').select('*').order('competencia', { ascending:false }).order('created_at', { ascending:false }));
+  if (!rows.length) { box.innerHTML = html`<div class="empty">Você ainda não enviou nenhuma nota. Use o botão “Enviar nota fiscal”.</div>`.s; return; }
+  box.innerHTML = html`${rows.map(n => html`<div class="nf-item">
+      <div class="row" style="justify-content:space-between;flex-wrap:nowrap"><div><b>${brMonth(n.competencia)}</b> <span class="muted">· NF ${n.numero}</span></div><div class="num">${money(n.valor)}</div></div>
+      <div class="row">${pill(n.status)}<span class="small muted">${statusTexto(n)}</span></div>
+      ${n.status === 'rejeitada' ? html`<div class="note neg small">Motivo: ${n.motivo_rejeicao}</div>` : ''}
+      <div class="row">
+        <button class="btn sm" data-ver="${n.id}">Ver arquivo</button>
+        ${['enviada','rejeitada'].includes(n.status) ? html`<button class="btn sm${n.status === 'rejeitada' ? raw(' pri') : ''}" data-edit="${n.id}">${n.status === 'rejeitada' ? 'Corrigir e reenviar' : 'Editar'}</button>` : ''}
+        ${n.status === 'enviada' ? html`<button class="btn sm danger" data-del="${n.id}">Excluir</button>` : ''}
+      </div></div>`)}`.s;
+  $$('[data-ver]', box).forEach(b => b.onclick = () => abrirArquivo(rows.find(r => r.id === b.dataset.ver).arquivo_path));
+  $$('[data-edit]', box).forEach(b => b.onclick = () => nfForm(rows.find(r => r.id === b.dataset.edit)));
+  $$('[data-del]', box).forEach(b => b.onclick = async () => {
+    const n = rows.find(r => r.id === b.dataset.del);
+    if (!await confirmar('Excluir nota', `Excluir a NF ${n.numero}? Você pode enviar de novo depois.`, 'Excluir')) return;
+    try { await q(sb.from('notas_fiscais').delete().eq('id', n.id)); await sb.storage.from('notas-fiscais').remove([n.arquivo_path]); toast('Nota excluída.'); portalLista(); } catch(e) { toast(errMsg(e), true); }
+  });
+}
+function statusTexto(n){
+  if (n.status === 'enviada') return 'Recebida, aguardando conferência do financeiro';
+  if (n.status === 'aprovada') return n.data_prevista_pagamento ? `Aprovada · pagamento previsto para ${brDate(n.data_prevista_pagamento)}` : 'Aprovada';
+  if (n.status === 'paga') return `Paga em ${brDate(n.data_pagamento)}`;
+  if (n.status === 'rejeitada') return 'Precisa de correção';
+  return '';
+}
+
+async function abrirArquivo(path, bucket='notas-fiscais'){
+  const w = window.open('', '_blank');
+  const { data, error } = await sb.storage.from(bucket).createSignedUrl(path, 300);
+  if (error) { w?.close(); return toast(errMsg(error), true); }
+  if (w) w.location = data.signedUrl; else location.href = data.signedUrl;
+}
+
+const ACEITOS = '.pdf,.xml,.png,.jpg,.jpeg,application/pdf,text/xml,application/xml,image/png,image/jpeg';
+async function uploadNF(fornecedorId, competencia, file){
+  if (file.size > 10 * 1024 * 1024) throw new Error('Arquivo maior que 10 MB.');
+  const nomeLimpo = file.name.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w.\-]+/g,'_').slice(-80);
+  const path = `${fornecedorId}/${competencia.slice(0,7)}/${Date.now()}-${nomeLimpo}`;
+  const { error } = await sb.storage.from('notas-fiscais').upload(path, file, { contentType: file.type || undefined });
+  if (error) throw error;
+  return { path, nome: file.name };
+}
+
+// Formulário de NF — usado pelo PJ no portal e pelo financeiro ("registrar NF recebida por e-mail")
+async function nfForm(nf=null, { fornecedorId=null, depois=portalLista } = {}){
+  const doFinanceiro = !!fornecedorId || (isFin() && nf);
+  const forn = fornecedorId ? S.lk.fornecedores.find(f => f.id === fornecedorId) : S.fornecedor;
+  // até o dia 15, o mais comum é estar enviando a nota do mês anterior
+  const compPadrao = firstDay(new Date().getDate() <= 15 ? addMonths(monthKey(), -1) : monthKey());
+  const initial = nf ? { ...nf } : { competencia: compPadrao, valor: forn?.valor_mensal, data_emissao: today() };
+  const fields = [
+    { key:'competencia', label:'Mês do serviço', type:'month', required:true, hint:'Mês em que o serviço foi prestado' },
+    { key:'numero', label:'Número da NF', required:true },
+    { key:'data_emissao', label:'Data de emissão', type:'date', required:true },
+    { key:'valor', label:'Valor da nota (R$)', type:'money', required:true, hint: forn?.valor_mensal ? `Valor combinado: ${money(forn.valor_mensal)}` : '' },
+    { key:'descricao_servico', label:'Descrição do serviço', type:'textarea' },
+    { key:'arquivo', label: nf ? 'Substituir arquivo (opcional)' : 'Arquivo da nota (PDF ou XML)', type:'file', accept:ACEITOS, required:!nf, full:true, hint:'Até 10 MB' },
+  ];
+  const note = nf?.status === 'rejeitada' ? `Motivo da devolução: ${nf.motivo_rejeicao}` : (doFinanceiro ? `Registrando nota de ${forn?.nome}` : null);
+  const ok = await formModal({ title: nf ? `NF ${nf.numero}` : 'Enviar nota fiscal', fields, initial, note, saveLabel: nf?.status === 'rejeitada' ? 'Reenviar' : 'Enviar', onSave: async d => {
+    if (d.valor <= 0) throw new Error('O valor precisa ser maior que zero.');
+    const fid = nf?.fornecedor_id || forn.id;
+    let arq = null;
+    if (d.arquivo) arq = await uploadNF(fid, d.competencia, d.arquivo);
+    const row = { competencia:d.competencia, numero:d.numero.trim(), data_emissao:d.data_emissao, valor:d.valor, descricao_servico:d.descricao_servico };
+    if (arq) Object.assign(row, { arquivo_path:arq.path, arquivo_nome:arq.nome });
+    try {
+      if (nf) await q(sb.from('notas_fiscais').update(row).eq('id', nf.id));
+      else await q(sb.from('notas_fiscais').insert({ ...row, fornecedor_id: fid }));
+    } catch(e) { if (arq) await sb.storage.from('notas-fiscais').remove([arq.path]); throw e; }
+    if (arq && nf?.arquivo_path) await sb.storage.from('notas-fiscais').remove([nf.arquivo_path]);
+    return true;
+  }});
+  if (ok) { toast(nf ? 'Nota atualizada.' : 'Nota enviada! O financeiro vai conferir.'); depois(); }
+}
+
+// ============================================================================
+// SISTEMA INTERNO
+// ============================================================================
+const ROTAS = [
+  { sec:'Visão geral' },
+  { id:'painel', label:'Painel', fn:viewPainel },
+  { sec:'Operação' },
+  { id:'pagar', label:'Contas a pagar', fn:() => viewLancamentos('pagar') },
+  { id:'receber', label:'Contas a receber', fn:() => viewLancamentos('receber') },
+  { id:'notas', label:'Notas fiscais', fn:viewNotas, badge:'nfPend' },
+  { id:'conciliacao', label:'Conciliação bancária', fn:viewConciliacao, badge:'extPend' },
+  { id:'cartoes', label:'Cartões de crédito', fn:viewCartoes },
+  { id:'recorrencias', label:'Recorrências', fn:viewRecorrencias },
+  { sec:'Análise' },
+  { id:'relatorios', label:'Relatórios (DRE)', fn:viewRelatorios },
+  { id:'projetos', label:'Projetos e eventos', fn:viewProjetos },
+  { id:'pessoas', label:'Custo de pessoas', fn:viewPessoas },
+  { sec:'Configuração' },
+  { id:'cadastros', label:'Cadastros', fn:viewCadastros },
+  { id:'exportar', label:'Exportar planilha', fn:viewExportar },
+  { id:'usuarios', label:'Usuários', fn:viewUsuarios, admin:true },
+  { id:'parametros', label:'Parâmetros', fn:viewParametros, fin:true },
+  { id:'auditoria', label:'Auditoria', fn:viewAuditoria, fin:true },
+];
+
+async function route(){
+  const id = location.hash.replace('#/','') || 'painel';
+  const r = ROTAS.find(x => x.id === id && (!x.admin || isAdmin()) && (!x.fin || isFin())) || ROTAS[1];
+  let nfPend = 0;
+  let extPend = 0;
+  try { const r2 = await q(sb.from('notas_fiscais').select('id', { count:'exact', head:true }).eq('status','enviada')); nfPend = r2.count || 0; } catch {}
+  try { const r3 = await q(sb.from('extrato_linhas').select('id', { count:'exact', head:true }).eq('status','pendente')); extPend = r3.count || 0; } catch {}
+  const badges = { nfPend, extPend };
+  root.innerHTML = html`<div class="app">
+    <aside class="side" id="side"><div class="brand"><small>Sistema</small>Financeiro</div>
+      <nav class="nav">${ROTAS.filter(x => x.sec || ((!x.admin || isAdmin()) && (!x.fin || isFin()))).map(x => x.sec ? html`<div class="nav-sec">${x.sec}</div>` : html`<a href="#/${x.id}" class="${x.id === r.id ? 'on' : ''}">${x.label}${x.badge && badges[x.badge] ? html`<span class="badge">${badges[x.badge]}</span>` : ''}</a>`)}</nav>
+      <div class="side-foot">${S.perfil.nome || S.session.user.email}<br><span class="muted">${S.perfil.papel}</span> · <button class="linkbtn" id="sair">sair</button></div>
+    </aside>
+    <main class="main"><button class="btn sm menu-btn" id="menu" style="margin-bottom:12px">☰ Menu</button><div id="view"><div class="empty">Carregando…</div></div></main></div>`.s;
+  $('#sair').onclick = () => sb.auth.signOut();
+  $('#menu').onclick = () => $('#side').classList.toggle('open');
+  try { await r.fn($('#view')); } catch(e) { $('#view').innerHTML = html`<div class="note neg">${errMsg(e)}</div>`.s; }
+}
+const view = () => $('#view');
+
+// ---------------------------------------------------------------- PAINEL ----
+async function viewPainel(){
+  const mes = monthKey(), ini = firstDay(mes), fim = lastDay(mes);
+  const hoje = today(), em10 = iso(new Date(Date.now() + 10*864e5));
+  const [aberto, atrasados, fluxo, prox, saldos, nfs] = await Promise.all([
+    q(sb.from('vw_lancamentos').select('tipo,valor').in('status',['previsto','aprovado']).gte('data_vencimento', ini).lte('data_vencimento', fim)),
+    q(sb.from('vw_lancamentos').select('tipo,valor').eq('situacao','atrasado')),
+    q(sb.from('vw_fluxo_mensal').select('*').gte('mes', firstDay(addMonths(mes,-5))).lte('mes', firstDay(addMonths(mes,3))).order('mes')),
+    q(sb.from('vw_lancamentos').select('id,tipo,descricao,valor,data_vencimento,fornecedor,situacao,aguardando_nf').in('status',['previsto','aprovado']).is('fatura_id', null).gte('data_vencimento', hoje).lte('data_vencimento', em10).order('data_vencimento').limit(10)),
+    q(sb.from('vw_saldo_contas').select('*')),
+    q(sb.from('notas_fiscais').select('valor').eq('status','enviada')),
+  ]);
+  // faturas de cartão aparecem como uma saída só, não compra a compra
+  const fatsProx = await q(sb.from('vw_faturas').select('cartao,total,data_vencimento').neq('status','paga').gte('data_vencimento', hoje).lte('data_vencimento', em10)).catch(() => []);
+  prox.push(...fatsProx.filter(f => Number(f.total) > 0).map(f => ({ tipo:'pagar', descricao:`Fatura ${f.cartao}`, valor:f.total, data_vencimento:f.data_vencimento })));
+  prox.sort((a, b) => a.data_vencimento.localeCompare(b.data_vencimento));
+  const sum = (arr, t) => arr.filter(x => !t || x.tipo === t).reduce((a,x) => a + Number(x.valor), 0);
+  const fm = fluxo.find(x => x.mes === ini) || {};
+  const saldoTotal = saldos.filter(x => x.tipo !== 'cartao').reduce((a,x) => a + Number(x.saldo_atual), 0);
+  view().innerHTML = html`
+    <div class="head"><div><h1>Painel</h1><p>${MESES[+mes.slice(5)-1]} de ${mes.slice(0,4)} · atualizado agora</p></div>
+      ${isFin() ? html`<div class="row"><button class="btn" id="gerar">Gerar recorrências de ${brMonth(ini)}</button><a class="btn pri" href="#/pagar">Novo lançamento</a></div>` : ''}</div>
+    <div class="kpis">
+      <div class="card kpi"><div class="l">A pagar no mês (em aberto)</div><div class="v neg">${money(sum(aberto,'pagar'))}</div><div class="s">já pago: ${money(fm.despesas_realizadas || 0)}</div></div>
+      <div class="card kpi"><div class="l">A receber no mês (em aberto)</div><div class="v pos">${money(sum(aberto,'receber'))}</div><div class="s">já recebido: ${money(fm.receitas_realizadas || 0)}</div></div>
+      <div class="card kpi"><div class="l">Atrasados</div><div class="v ${atrasados.length ? 'neg' : ''}">${atrasados.length}</div><div class="s">${money(sum(atrasados,'pagar'))} a pagar · ${money(sum(atrasados,'receber'))} a receber</div></div>
+      <div class="card kpi"><div class="l">NFs aguardando conferência</div><div class="v">${nfs.length}</div><div class="s">${money(sum(nfs))} · <a href="#/notas">conferir</a></div></div>
+      <div class="card kpi"><div class="l">Saldo nas contas</div><div class="v">${money(saldoTotal)}</div><div class="s">${saldos.some(s => s.tipo !== 'cartao' && !s.data_saldo_inicial) ? html`<a href="#/cadastros">defina o saldo inicial</a> para ficar correto` : 'contas correntes, pelo sistema'}</div></div>
+      <div class="card kpi"><div class="l">Extrato a conciliar</div><div class="v">${saldos.reduce((a, s) => a + (s.pendentes || 0), 0)}</div><div class="s">${saldos.filter(s => s.pendentes).map(s => s.nome).join(', ') || 'nada pendente'} · <a href="#/conciliacao">conciliar</a></div></div>
+      <div class="card kpi"><div class="l">Cartões em aberto</div><div class="v neg">${money(-saldos.filter(s => s.tipo === 'cartao').reduce((a, s) => a + Number(s.saldo_atual), 0))}</div><div class="s"><a href="#/cartoes">ver faturas</a></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card pad chart"><div class="row" style="justify-content:space-between;margin-bottom:10px"><h2>Fluxo de caixa</h2>
+        <div class="legend"><span><i style="background:var(--pos)"></i>Entradas</span><span><i style="background:var(--neg)"></i>Saídas</span><span><i style="background:var(--ink-3);opacity:.35"></i>Previsto</span></div></div>
+        ${chartFluxo(fluxo, mes)}
+        <p class="small muted" style="margin:8px 0 0">Realizado pela data de pagamento; previsto pela data de vencimento. Transferências e aportes ficam fora.</p></div>
+      <div class="card pad"><h2 style="margin-bottom:6px">Próximos 10 dias</h2>
+        ${prox.length ? prox.map(l => html`<div class="list-item"><div><div>${l.descricao}</div><div class="small muted">${brDate(l.data_vencimento)}${l.fornecedor ? ' · ' + l.fornecedor : ''}${l.aguardando_nf ? html` · <span class="pill p-enviada">aguarda NF</span>` : ''}</div></div><div class="num ${l.tipo === 'pagar' ? 'neg' : 'pos'}">${l.tipo === 'pagar' ? '−' : '+'}${money(l.valor)}</div></div>`) : html`<div class="empty">Nada vencendo.</div>`}
+      </div>
+    </div>`.s;
+  $('#gerar')?.addEventListener('click', () => gerarRecorrencias(mes));
+}
+
+async function gerarRecorrencias(mes){
+  try { const n = await q(sb.rpc('gerar_recorrencias', { p_mes: firstDay(mes) })); toast(n ? `${n} lançamentos gerados para ${brMonth(firstDay(mes))}.` : `Nada novo: ${brMonth(firstDay(mes))} já estava gerado.`); route(); }
+  catch(e) { toast(errMsg(e), true); }
+}
+
+function chartFluxo(rows, atual){
+  const meses = []; for (let i = -5; i <= 3; i++) meses.push(addMonths(atual, i));
+  const data = meses.map(m => { const r = rows.find(x => x.mes === firstDay(m)) || {}; return { m, er:+r.receitas_realizadas||0, sr:+r.despesas_realizadas||0, ep:+r.receitas_previstas||0, sp:+r.despesas_previstas||0 }; });
+  const max = Math.max(1, ...data.map(d => Math.max(d.er+d.ep, d.sr+d.sp)));
+  const W = 640, H = 240, pl = 58, pb = 28, pt = 10, cw = (W - pl) / data.length, bw = Math.min(22, cw/3);
+  const y = v => pt + (H - pt - pb) * (1 - v / max);
+  const fmtK = v => v >= 1e6 ? (v/1e6).toFixed(1).replace('.',',') + ' mi' : v >= 1e3 ? Math.round(v/1e3) + ' mil' : Math.round(v);
+  const ticks = [0, .25, .5, .75, 1].map(t => max * t);
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Fluxo de caixa mensal">`;
+  ticks.forEach(t => { s += `<line x1="${pl}" x2="${W}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)"/><text x="${pl-8}" y="${y(t)+4}" text-anchor="end" font-size="10" fill="var(--ink-3)">${fmtK(t)}</text>`; });
+  data.forEach((d, i) => {
+    const cx = pl + cw * i + cw/2;
+    const bar = (x, real, prev, cor) => {
+      let o = ''; const y0 = y(0), yr = y(real), yp = y(real + prev);
+      if (real) o += `<rect x="${x}" y="${yr}" width="${bw}" height="${y0-yr}" rx="2" fill="${cor}"><title>${esc(brMonth(firstDay(d.m)))}: ${esc(money(real))} realizado</title></rect>`;
+      if (prev) o += `<rect x="${x}" y="${yp}" width="${bw}" height="${yr-yp}" rx="2" fill="${cor}" opacity=".35"><title>${esc(brMonth(firstDay(d.m)))}: ${esc(money(prev))} previsto</title></rect>`;
+      return o;
+    };
+    s += bar(cx - bw - 1, d.er, d.ep, 'var(--pos)') + bar(cx + 1, d.sr, d.sp, 'var(--neg)');
+    s += `<text x="${cx}" y="${H-8}" text-anchor="middle" font-size="11" fill="${d.m === atual ? 'var(--ink)' : 'var(--ink-3)'}" font-weight="${d.m === atual ? 600 : 400}">${brMonth(firstDay(d.m))}</text>`;
+  });
+  return raw(s + '</svg>');
+}
+
+// ---------------------------------------------------------- LANÇAMENTOS ----
+const PAGE = 50;
+function lancFields(tipo){
+  const catFilter = c => tipo === 'pagar' ? c.tipo !== 'receita' : c.tipo !== 'despesa';
+  return [
+    { key:'descricao', label:'Descrição', required:true, full:true },
+    { key:'fornecedor_id', label: tipo === 'pagar' ? 'Fornecedor / pessoa' : 'Cliente', type:'select', options:() => opts(S.lk.fornecedores),
+      onChange:(d, form) => { const f = S.lk.fornecedores.find(x => x.id === d.fornecedor_id); if (!f) return;
+        if (!form.elements.categoria_id.value && f.categoria_padrao_id) form.elements.categoria_id.value = f.categoria_padrao_id;
+        if (!form.elements.centro_custo_id.value && f.centro_custo_padrao_id) form.elements.centro_custo_id.value = f.centro_custo_padrao_id;
+        if (!form.elements.conta_id.value && f.conta_padrao_id) form.elements.conta_id.value = f.conta_padrao_id;
+        if (!form.elements.valor.value && (f.valor_mensal || f.salario_bruto)) form.elements.valor.value = moneyInput(f.valor_mensal || f.salario_bruto); } },
+    { key:'valor', label:'Valor (R$)', type:'money', required:true },
+    { key:'categoria_id', label:'Categoria', type:'select', required:true, options:() => opts(S.lk.categorias, catFilter) },
+    { key:'centro_custo_id', label:'Centro de custo/lucro', type:'select', options:() => opts(S.lk.centros) },
+    { key:'conta_id', label:'Conta ou cartão', type:'select', options:() => S.lk.contas.filter(c => c.ativo !== false).map(c => ({ value:c.id, label: c.nome + (c.tipo === 'cartao' ? ' (cartão)' : '') })), hint:'Escolhendo um cartão, a compra entra na fatura certa sozinha' },
+    { key:'data_competencia', label:'Competência', type:'month', required:true, hint:'Mês a que pertence (DRE)' },
+    { key:'data_documento', label:'Data da compra / emissão', type:'date' },
+    { key:'data_vencimento', label:'Vencimento', type:'date', required:true },
+    { key:'status', label:'Status', type:'select', required:true, options:[{value:'previsto',label:'Previsto'},{value:'aprovado',label:'Aprovado'},{value:'pago',label: tipo === 'pagar' ? 'Pago' : 'Recebido'},{value:'cancelado',label:'Cancelado'}] },
+    { key:'data_pagamento', label: tipo === 'pagar' ? 'Data do pagamento' : 'Data do recebimento', type:'date', hint:'Obrigatória se status = pago' },
+    { key:'forma_pagamento', label:'Forma', type:'select', options:[['pix','PIX'],['boleto','Boleto'],['transferencia','Transferência'],['cartao_credito','Cartão de crédito'],['debito_automatico','Débito automático'],['dinheiro','Dinheiro'],['outro','Outro']].map(([value,label]) => ({value,label})) },
+    { key:'custo_nivel', label:'Nível de custo', type:'select', options:[{value:'fixo',label:'Fixo'},{value:'variavel',label:'Variável'}] },
+    { key:'projeto_id', label:'Projeto / evento', type:'select', options:() => opts(S.lk.projetos) },
+    { key:'tags', label:'Tags', type:'tags' },
+    { key:'codigo_barras', label:'Código de barras / linha digitável do boleto', full:true },
+    { key:'observacoes', label:'Observações', type:'textarea' },
+  ];
+}
+const LANC_COLS = ['descricao','fornecedor_id','valor','categoria_id','centro_custo_id','conta_id','data_competencia','data_vencimento','data_documento','status','data_pagamento','forma_pagamento','custo_nivel','projeto_id','tags','codigo_barras','observacoes'];
+function limpaLanc(d, tipo){
+  const o = { tipo }; LANC_COLS.forEach(k => o[k] = d[k] ?? (k === 'tags' ? [] : null));
+  if (o.status === 'pago' && !o.data_pagamento) o.data_pagamento = o.data_vencimento <= today() ? o.data_vencimento : today();
+  if (o.status !== 'pago') o.data_pagamento = null;
+  return o;
+}
+async function editarLanc(tipo, row=null, dup=false, depois=route){
+  const initial = row ? { ...row } : { status:'previsto', data_competencia: firstDay(monthKey()), data_vencimento: today(), tags:[] };
+  if (dup) { initial.status = 'previsto'; initial.data_pagamento = null; }
+  const ok = await formModal({ title: row && !dup ? 'Editar lançamento' : (tipo === 'pagar' ? 'Nova conta a pagar' : 'Nova conta a receber'), fields: lancFields(tipo), initial,
+    note: row?.conciliado && !dup ? 'Este lançamento está conciliado com o extrato. Para mudar valor ou data, desfaça a conciliação em Conciliação bancária.' : row?.fatura_id && row?.id && !dup ? 'Compra de cartão: vencimento e status vêm da fatura.' : row?.nota_fiscal_id ? 'Este lançamento está ligado a uma nota fiscal. Ao marcar como pago, o PJ vê a nota como paga no portal.' : null,
+    onSave: async d => { const o = limpaLanc(d, tipo); if (row && !dup) await q(sb.from('lancamentos').update(o).eq('id', row.id)); else await q(sb.from('lancamentos').insert(o)); } });
+  if (ok) { toast('Salvo.'); depois(); }
+}
+
+async function viewLancamentos(tipo){
+  const st = store.get('fin_filtro_' + tipo) || { mes: monthKey(), situacao:'abertos', busca:'', categoria:'', centro:'', page:0 };
+  st.semCartao ??= true;
+  const titulo = tipo === 'pagar' ? 'Contas a pagar' : 'Contas a receber';
+  const render = async () => {
+    store.set('fin_filtro_' + tipo, st);
+    let qb = sb.from('vw_lancamentos').select('*', { count:'exact' }).eq('tipo', tipo);
+    if (st.mes) qb = qb.gte('data_vencimento', firstDay(st.mes)).lte('data_vencimento', lastDay(st.mes));
+    if (st.situacao === 'abertos') qb = qb.in('status', ['previsto','aprovado']);
+    else if (st.situacao) qb = qb.eq('situacao', st.situacao);
+    if (st.busca) { const t = st.busca.replace(/[%*,()]/g,' ').trim(); qb = qb.or(`descricao.ilike.*${t}*,fornecedor.ilike.*${t}*`); }
+    if (st.categoria) qb = qb.eq('categoria_id', st.categoria);
+    if (st.centro) qb = qb.eq('centro_custo_id', st.centro);
+    if (st.semCartao) qb = qb.is('fatura_id', null);
+    const { data:rows, count } = await q(qb.order('data_vencimento').order('descricao').range(st.page*PAGE, st.page*PAGE + PAGE - 1));
+    let totQ = sb.from('vw_lancamentos').select('valor,situacao').eq('tipo', tipo);
+    if (st.mes) totQ = totQ.gte('data_vencimento', firstDay(st.mes)).lte('data_vencimento', lastDay(st.mes));
+    if (st.categoria) totQ = totQ.eq('categoria_id', st.categoria);
+    if (st.centro) totQ = totQ.eq('centro_custo_id', st.centro);
+    if (st.semCartao) totQ = totQ.is('fatura_id', null);
+    const tot = await q(totQ.neq('status','cancelado').limit(10000));
+    const soma = f => tot.filter(f).reduce((a,x) => a + Number(x.valor), 0);
+    const verbo = tipo === 'pagar' ? 'pago' : 'recebido';
+    view().innerHTML = html`
+      <div class="head"><div><h1>${titulo}</h1><p>${st.mes ? 'Vencimento em ' + brMonth(firstDay(st.mes)) : 'Todos os períodos'}</p></div>
+        ${isFin() ? html`<button class="btn pri" id="novo">+ Novo</button>` : ''}</div>
+      <div class="kpis">
+        <div class="card kpi"><div class="l">Total do período</div><div class="v">${money(soma(() => true))}</div></div>
+        <div class="card kpi"><div class="l">Já ${verbo}</div><div class="v pos">${money(soma(x => x.situacao === 'pago'))}</div></div>
+        <div class="card kpi"><div class="l">Em aberto</div><div class="v">${money(soma(x => ['previsto','aprovado'].includes(x.situacao)))}</div></div>
+        <div class="card kpi"><div class="l">Atrasado</div><div class="v neg">${money(soma(x => x.situacao === 'atrasado'))}</div></div>
+      </div>
+      <div class="card">
+        <div class="filters">
+          <input type="month" id="fm" value="${st.mes}" title="Mês de vencimento">
+          <button class="btn sm" id="fall">${st.mes ? 'Todos os meses' : 'Mês atual'}</button>
+          <select id="fs"><option value="">Todas as situações</option>${[['abertos','Em aberto'],['previsto','Previsto'],['aprovado','Aprovado'],['atrasado','Atrasado'],['pago', tipo === 'pagar' ? 'Pago' : 'Recebido'],['cancelado','Cancelado']].map(([v,l]) => html`<option value="${v}"${st.situacao === v ? raw(' selected') : ''}>${l}</option>`)}</select>
+          <select id="fc"><option value="">Todas as categorias</option>${S.lk.categorias.map(c => html`<option value="${c.id}"${st.categoria === c.id ? raw(' selected') : ''}>${c.nome}</option>`)}</select>
+          <select id="fcc"><option value="">Todos os centros</option>${S.lk.centros.map(c => html`<option value="${c.id}"${st.centro === c.id ? raw(' selected') : ''}>${c.nome}</option>`)}</select>
+          <input id="fb" class="grow" placeholder="Buscar descrição ou fornecedor" value="${st.busca}">
+          ${tipo === 'pagar' ? html`<label class="row small"><input type="checkbox" id="fcart"${st.semCartao ? raw(' checked') : ''}> ocultar compras de cartão</label>` : ''}
+        </div>
+        ${isFin() ? html`<div class="filters" id="bulk" style="display:none;background:var(--brand-soft)"><span id="bulkn"></span><button class="btn sm ok" id="bpago">Marcar como ${verbo}</button><button class="btn sm" id="baprov">Aprovar</button></div>` : ''}
+        ${rows.length ? html`<div class="tbl-wrap"><table><thead><tr>${isFin() ? html`<th><input type="checkbox" id="all"></th>` : ''}<th>Vencimento</th><th>Descrição</th><th>Categoria</th><th>Centro</th><th class="r">Valor</th><th>Situação</th><th></th></tr></thead><tbody>
+          ${rows.map(l => html`<tr>${isFin() ? html`<td><input type="checkbox" data-sel="${l.id}"${['pago','cancelado'].includes(l.status) || l.fatura_id ? raw(' disabled') : ''}></td>` : ''}
+            <td class="num">${brDate(l.data_vencimento)}</td>
+            <td><div>${l.descricao}</div><div class="small muted">${l.fornecedor || ''}${l.projeto ? ' · ' + l.projeto : ''}${l.status === 'pago' ? ` · ${verbo} em ${brDate(l.data_pagamento)}` : ''}</div></td>
+            <td class="small">${l.categoria || html`<span class="neg">sem categoria</span>`}</td><td class="small muted">${l.centro_custo || '—'}</td>
+            <td class="r num">${money(l.valor)}</td>
+            <td>${pill(l.situacao)}${l.conciliado ? html` <span class="pill p-pago" title="Conciliado com o extrato">✓ extrato</span>` : ''}${l.fatura_id ? html` <span class="pill p-previsto">${l.conta}</span>` : ''}${l.aguardando_nf ? html` <span class="pill p-enviada" title="Recorrência de PJ: vira aprovado quando a NF for aprovada">aguarda NF</span>` : ''}</td>
+            <td class="r"><div class="row" style="justify-content:flex-end;flex-wrap:nowrap">
+              ${l.nota_fiscal_id ? html`<button class="btn sm" data-nf="${l.nota_fiscal_id}">NF</button>` : ''}
+              <button class="btn sm" data-anx="${l.id}" title="Comprovantes e boletos">📎${l.qtd_anexos ? ' ' + l.qtd_anexos : ''}</button>
+              ${l.codigo_barras ? html`<button class="btn sm" data-cb="${l.codigo_barras}" title="Copiar linha digitável">Boleto</button>` : ''}
+              ${isFin() && !['pago','cancelado'].includes(l.status) && !l.fatura_id ? html`<button class="btn sm ok" data-pago="${l.id}">${tipo === 'pagar' ? 'Pagar' : 'Receber'}</button>` : ''}
+              ${isFin() ? html`<button class="btn sm" data-ed="${l.id}">Editar</button><button class="btn sm" data-dup="${l.id}" title="Duplicar">⧉</button><button class="btn sm danger" data-del="${l.id}" title="Excluir">✕</button>` : ''}
+            </div></td></tr>`)}
+        </tbody></table></div>` : html`<div class="empty">Nenhum lançamento com esses filtros.</div>`}
+        <div class="pager"><span>${count} lançamento(s)</span><div class="row"><button class="btn sm" id="prev"${st.page ? '' : raw(' disabled')}>‹ Anterior</button><span>pág. ${st.page+1} de ${Math.max(1, Math.ceil(count/PAGE))}</span><button class="btn sm" id="next"${(st.page+1)*PAGE < count ? '' : raw(' disabled')}>Próxima ›</button></div></div>
+      </div>`.s;
+    const set = (k, v) => { st[k] = v; st.page = 0; render(); };
+    $('#fm').onchange = e => set('mes', e.target.value);
+    $('#fall').onclick = () => set('mes', st.mes ? '' : monthKey());
+    $('#fs').onchange = e => set('situacao', e.target.value);
+    $('#fc').onchange = e => set('categoria', e.target.value);
+    $('#fcc').onchange = e => set('centro', e.target.value);
+    $('#fcart')?.addEventListener('change', e => set('semCartao', e.target.checked));
+    let tm; $('#fb').oninput = e => { clearTimeout(tm); tm = setTimeout(() => set('busca', e.target.value.trim()), 350); };
+    $('#prev').onclick = () => { st.page--; render(); }; $('#next').onclick = () => { st.page++; render(); };
+    $('#novo')?.addEventListener('click', () => editarLanc(tipo));
+    const byId = id => rows.find(r => r.id === id);
+    $$('[data-ed]').forEach(b => b.onclick = () => editarLanc(tipo, byId(b.dataset.ed)));
+    $$('[data-dup]').forEach(b => b.onclick = () => editarLanc(tipo, byId(b.dataset.dup), true));
+    $$('[data-nf]').forEach(b => b.onclick = async () => { const n = await q(sb.from('notas_fiscais').select('arquivo_path').eq('id', b.dataset.nf).single()); abrirArquivo(n.arquivo_path); });
+    $$('[data-pago]').forEach(b => b.onclick = () => marcarPago([byId(b.dataset.pago)], tipo));
+    $$('[data-anx]').forEach(b => b.onclick = () => { const l = byId(b.dataset.anx); modalAnexos({ lancamentoId: l.id, titulo: `Anexos · ${l.descricao}` }).then(render); });
+    $$('[data-cb]').forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.cb); toast('Linha digitável copiada.'); } catch { toast(b.dataset.cb); } });
+    $$('[data-del]').forEach(b => b.onclick = async () => { const l = byId(b.dataset.del);
+      if (!await confirmar('Excluir lançamento', `Excluir “${l.descricao}” (${money(l.valor)})? Se for só algo que não vai acontecer, prefira editar e mudar para “cancelado” — fica o histórico.`, 'Excluir')) return;
+      try { await q(sb.from('lancamentos').delete().eq('id', l.id)); toast('Excluído.'); render(); } catch(e) { toast(errMsg(e), true); } });
+    const sel = () => $$('[data-sel]:checked').map(c => byId(c.dataset.sel));
+    const upd = () => { const n = sel().length; const b = $('#bulk'); if (!b) return; b.style.display = n ? 'flex' : 'none'; $('#bulkn').textContent = `${n} selecionado(s) · ${money(sel().reduce((a,x) => a + Number(x.valor), 0))}`; };
+    $$('[data-sel]').forEach(c => c.onchange = upd);
+    $('#all')?.addEventListener('change', e => { $$('[data-sel]:not(:disabled)').forEach(c => c.checked = e.target.checked); upd(); });
+    $('#bpago')?.addEventListener('click', () => marcarPago(sel(), tipo));
+    $('#baprov')?.addEventListener('click', async () => { try { await q(sb.from('lancamentos').update({ status:'aprovado' }).in('id', sel().map(x => x.id)).eq('status','previsto')); toast('Aprovados.'); render(); } catch(e) { toast(errMsg(e), true); } });
+  };
+  await render();
+}
+
+async function marcarPago(list, tipo){
+  if (!list.length) return;
+  const semNF = list.filter(l => l.aguardando_nf);
+  const ok = await formModal({ title: `Marcar ${list.length} como ${tipo === 'pagar' ? 'pago' : 'recebido'}`,
+    note: semNF.length ? `Atenção: ${semNF.length} lançamento(s) de PJ ainda sem nota fiscal aprovada (${semNF.map(l => l.fornecedor || l.descricao).join(', ')}).` : `Total: ${money(list.reduce((a,x) => a + Number(x.valor), 0))}`,
+    fields:[{ key:'data', label:'Data', type:'date', required:true }], initial:{ data: today() },
+    onSave: async d => { await q(sb.from('lancamentos').update({ status:'pago', data_pagamento:d.data }).in('id', list.map(x => x.id))); } });
+  if (ok) { toast('Pronto.'); route(); }
+}
+
+// -------------------------------------------------------- NOTAS FISCAIS ----
+async function viewNotas(){
+  const st = store.get('fin_filtro_nf') || { aba:'enviada', comp: firstDay(addMonths(monthKey(), -1)) };
+  const render = async () => {
+    store.set('fin_filtro_nf', st);
+    const abas = [['enviada','Para conferir'],['aprovada','Aprovadas'],['rejeitada','Devolvidas'],['paga','Pagas'],['todas','Todas'],['faltando','Quem ainda não enviou']];
+    let corpo;
+    if (st.aba === 'faltando') corpo = await notasFaltando(st);
+    else {
+      let qb = sb.from('notas_fiscais').select('*, fornecedores(nome, valor_mensal, email, chave_pix)').order('created_at', { ascending: st.aba === 'enviada' });
+      if (st.aba !== 'todas') qb = qb.eq('status', st.aba);
+      if (st.aba !== 'enviada') qb = qb.limit(200);
+      const rows = await q(qb);
+      corpo = rows.length ? html`<div class="tbl-wrap"><table><thead><tr><th>Prestador</th><th>Competência</th><th>NF</th><th class="r">Valor</th><th>Situação</th><th></th></tr></thead><tbody>
+        ${rows.map(n => { const esp = n.fornecedores?.valor_mensal; const dif = esp && Math.abs(Number(n.valor) - Number(esp)) >= 0.01;
+          return html`<tr><td><div>${n.fornecedores?.nome}</div><div class="small muted">enviada ${brDate(n.created_at)}${n.fornecedores?.chave_pix ? '' : html` · <span class="neg">sem PIX</span>`}</div></td>
+          <td>${brMonth(n.competencia)}</td><td><div>${n.numero}</div><div class="small muted">${n.data_emissao ? 'emissão ' + brDate(n.data_emissao) : ''}</div></td>
+          <td class="r"><div class="num">${money(n.valor)}</div>${dif ? html`<div class="small ${Number(n.valor) > Number(esp) ? 'neg' : 'muted'}">combinado ${money(esp)}</div>` : ''}</td>
+          <td>${pill(n.status)}${n.status === 'rejeitada' ? html`<div class="small muted">${n.motivo_rejeicao}</div>` : ''}${n.data_prevista_pagamento && n.status === 'aprovada' ? html`<div class="small muted">paga em ${brDate(n.data_prevista_pagamento)}</div>` : ''}</td>
+          <td class="r"><div class="row" style="justify-content:flex-end;flex-wrap:nowrap">
+            <button class="btn sm" data-ver="${n.id}">Abrir</button>
+            ${isFin() && n.status === 'enviada' ? html`<button class="btn sm ok" data-apr="${n.id}">Aprovar</button><button class="btn sm danger" data-rej="${n.id}">Devolver</button>` : ''}
+            ${isFin() && n.status === 'aprovada' ? html`<button class="btn sm" data-undo="${n.id}">Desfazer</button>` : ''}
+          </div></td></tr>`; })}
+      </tbody></table></div>` : html`<div class="empty">${st.aba === 'enviada' ? 'Nenhuma nota esperando conferência. 🎉' : 'Nada por aqui.'}</div>`;
+      corpo._rows = rows;
+    }
+    view().innerHTML = html`<div class="head"><div><h1>Notas fiscais</h1><p>Enviadas pelos prestadores no portal. Aprovar gera (ou confirma) a conta a pagar.</p></div>
+      ${isFin() ? html`<button class="btn" id="reg">Registrar NF recebida por e-mail</button>` : ''}</div>
+      <div class="tabs">${abas.map(([k,l]) => html`<button data-aba="${k}" class="${st.aba === k ? 'on' : ''}">${l}</button>`)}</div>
+      <div class="card">${corpo}</div>`.s;
+    $$('[data-aba]').forEach(b => b.onclick = () => { st.aba = b.dataset.aba; render(); });
+    $('#reg')?.addEventListener('click', async () => {
+      const r = await formModal({ title:'Registrar NF', fields:[{ key:'f', label:'Prestador', type:'select', required:true, options:() => opts(S.lk.fornecedores, f => f.ativo && ['pj','fornecedor'].includes(f.tipo)) }], saveLabel:'Continuar' });
+      if (r?.f) nfForm(null, { fornecedorId: r.f, depois: render });
+    });
+    const rows = corpo._rows || [];
+    const byId = id => rows.find(r => r.id === id);
+    $$('[data-ver]').forEach(b => b.onclick = () => abrirArquivo(byId(b.dataset.ver).arquivo_path));
+    $$('[data-apr]').forEach(b => b.onclick = async () => { const n = byId(b.dataset.apr); const esp = n.fornecedores?.valor_mensal;
+      const ok = await formModal({ title:`Aprovar NF ${n.numero} · ${n.fornecedores?.nome}`,
+        note: `${money(n.valor)} referente a ${brMonth(n.competencia)}.${esp && Math.abs(n.valor - esp) >= .01 ? ` Atenção: o valor combinado é ${money(esp)}.` : ''} Se já existir a previsão desse PJ no mês (recorrência), ela é confirmada com o valor da nota; se não, uma conta a pagar nova é criada.`,
+        fields:[{ key:'venc', label:'Data de pagamento (opcional)', type:'date', hint:'Em branco = dia de pagamento do cadastro, no mês seguinte à competência' }], saveLabel:'Aprovar',
+        onSave: async d => q(sb.rpc('aprovar_nota_fiscal', { p_nf:n.id, p_vencimento:d.venc || null })) });
+      if (ok) { toast('Nota aprovada e conta a pagar criada/confirmada.'); render(); } });
+    $$('[data-rej]').forEach(b => b.onclick = async () => { const n = byId(b.dataset.rej);
+      const ok = await formModal({ title:`Devolver NF ${n.numero}`, note:'O prestador vê este motivo no portal e pode corrigir e reenviar.',
+        fields:[{ key:'motivo', label:'Motivo', type:'textarea', required:true }], saveLabel:'Devolver',
+        onSave: async d => q(sb.rpc('rejeitar_nota_fiscal', { p_nf:n.id, p_motivo:d.motivo })) });
+      if (ok) { toast('Nota devolvida ao prestador.'); render(); } });
+    $$('[data-undo]').forEach(b => b.onclick = async () => { const n = byId(b.dataset.undo);
+      if (!await confirmar('Desfazer aprovação', `A NF ${n.numero} volta para “para conferir”. A conta a pagar volta a ser previsão (se veio de recorrência) ou é cancelada.`)) return;
+      try { await q(sb.rpc('desfazer_aprovacao_nf', { p_nf:n.id })); toast('Aprovação desfeita.'); render(); } catch(e) { toast(errMsg(e), true); } });
+    $('#fcomp')?.addEventListener('change', e => { st.comp = e.target.value + '-01'; render(); });
+    $$('[data-copy]').forEach(b => b.onclick = async () => { try { await navigator.clipboard.writeText(b.dataset.copy); toast('Mensagem copiada.'); } catch { toast('Não consegui copiar. Selecione e copie manualmente.', true); } });
+  };
+  await render();
+}
+
+async function notasFaltando(st){
+  const [forn, nfs, perfis] = await Promise.all([
+    q(sb.from('fornecedores').select('id,nome,email,valor_mensal').eq('ativo', true).eq('exige_nf', true).order('nome')),
+    q(sb.from('notas_fiscais').select('fornecedor_id').eq('competencia', st.comp)),
+    q(sb.from('perfis').select('fornecedor_id').not('fornecedor_id','is',null)),
+  ]);
+  const enviou = new Set(nfs.map(n => n.fornecedor_id)), temLogin = new Set(perfis.map(p => p.fornecedor_id));
+  const falta = forn.filter(f => !enviou.has(f.id));
+  const link = location.origin + location.pathname;
+  const msg = f => `Oi, ${f.nome.split(' ')[0]}! Ainda não recebemos sua NF de ${brMonth(st.comp)}. Envie pelo portal: ${link} (prazo: dia ${S.params?.dia_limite_envio_nf || 25}).`;
+  return html`<div class="filters"><label class="small muted">Competência</label><input type="month" id="fcomp" value="${st.comp.slice(0,7)}"><span class="small muted grow">${falta.length} de ${forn.length} prestadores com “exige NF” ainda não enviaram.</span></div>
+    ${falta.length ? html`<div class="tbl-wrap"><table><thead><tr><th>Prestador</th><th>Acesso ao portal</th><th class="r">Valor combinado</th><th></th></tr></thead><tbody>
+      ${falta.map(f => html`<tr><td>${f.nome}</td>
+        <td class="small">${!f.email ? html`<span class="neg">sem e-mail no cadastro</span> — não consegue acessar` : temLogin.has(f.id) ? html`<span class="ok">ativo</span> · ${f.email}` : html`<span class="muted">e-mail cadastrado, ainda não criou login</span> · ${f.email}`}</td>
+        <td class="r num">${money(f.valor_mensal)}</td><td class="r"><button class="btn sm" data-copy="${msg(f)}">Copiar lembrete</button></td></tr>`)}
+    </tbody></table></div>` : html`<div class="empty">Todo mundo enviou. 👏</div>`}`;
+}
+
+// --------------------------------------------------------- RECORRÊNCIAS ----
+async function viewRecorrencias(){
+  const rows = await q(sb.from('recorrencias').select('*, categorias(nome), fornecedores(nome), centros_custo(nome)').order('tipo').order('descricao'));
+  const fields = [
+    { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'pagar',label:'A pagar'},{value:'receber',label:'A receber'}] },
+    { key:'descricao', label:'Descrição', required:true },
+    { key:'valor', label:'Valor (R$)', type:'money', required:true },
+    { key:'dia_vencimento', label:'Dia do vencimento', type:'number', required:true, min:1, max:31 },
+    { key:'fornecedor_id', label:'Fornecedor / pessoa', type:'select', options:() => opts(S.lk.fornecedores) },
+    { key:'categoria_id', label:'Categoria', type:'select', required:true, options:() => opts(S.lk.categorias) },
+    { key:'centro_custo_id', label:'Centro de custo', type:'select', options:() => opts(S.lk.centros) },
+    { key:'conta_id', label:'Conta', type:'select', options:() => opts(S.lk.contas) },
+    { key:'periodicidade', label:'Periodicidade', type:'select', required:true, options:[{value:'mensal',label:'Mensal'},{value:'trimestral',label:'Trimestral'},{value:'anual',label:'Anual'}] },
+    { key:'custo_nivel', label:'Nível de custo', type:'select', options:[{value:'fixo',label:'Fixo'},{value:'variavel',label:'Variável'}] },
+    { key:'inicio', label:'Começa em', type:'month', required:true },
+    { key:'fim', label:'Termina em (opcional)', type:'month' },
+    { key:'projeto_id', label:'Projeto', type:'select', options:() => opts(S.lk.projetos) },
+    { key:'tags', label:'Tags', type:'tags' },
+    { key:'aguarda_nf', label:'PJ: só aprova quando a NF for aprovada', type:'bool', full:true },
+    { key:'ativo', label:'Ativa', type:'bool' },
+  ];
+  const cols = fields.map(f => f.key);
+  const salvar = async (d, id) => { const o = {}; cols.forEach(k => o[k] = d[k] ?? (k === 'tags' ? [] : null)); if (o.fim) o.fim = lastDay(o.fim.slice(0,7)); if (id) await q(sb.from('recorrencias').update(o).eq('id', id)); else await q(sb.from('recorrencias').insert(o)); };
+  const totP = rows.filter(r => r.ativo && r.tipo === 'pagar' && r.periodicidade === 'mensal').reduce((a,r) => a + Number(r.valor), 0);
+  view().innerHTML = html`<div class="head"><div><h1>Recorrências</h1><p>Modelos que viram lançamentos “previstos” todo mês. ${money(totP)}/mês em despesas mensais ativas.</p></div>
+    ${isFin() ? html`<div class="row"><input type="month" id="gm" value="${monthKey()}"><button class="btn" id="gerar">Gerar lançamentos do mês</button><button class="btn pri" id="novo">+ Nova</button></div>` : ''}</div>
+    <div class="note info" style="margin-bottom:14px">Gerar é seguro de repetir: o sistema não duplica o que já foi gerado. Recorrências de PJ marcadas com “aguarda NF” geram a previsão com competência do mês anterior (o pagamento de outubro é do serviço de setembro) e só viram “aprovado” quando a nota for aprovada.</div>
+    <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Descrição</th><th>Categoria</th><th>Dia</th><th>Periodicidade</th><th class="r">Valor</th><th></th></tr></thead><tbody>
+      ${rows.map(r => html`<tr style="${r.ativo ? '' : 'opacity:.5'}"><td><div>${r.descricao}</div><div class="small muted">${r.tipo === 'pagar' ? 'a pagar' : 'a receber'}${r.fornecedores ? ' · ' + r.fornecedores.nome : ''}${r.aguarda_nf ? ' · aguarda NF' : ''}${r.ativo ? '' : ' · inativa'}</div></td>
+        <td class="small">${r.categorias?.nome || '—'}</td><td>${r.dia_vencimento}</td><td>${r.periodicidade}</td><td class="r num ${r.tipo === 'pagar' ? 'neg' : 'pos'}">${money(r.valor)}</td>
+        <td class="r">${isFin() ? html`<button class="btn sm" data-ed="${r.id}">Editar</button>` : ''}</td></tr>`)}
+    </tbody></table></div></div>`.s;
+  $('#novo')?.addEventListener('click', async () => { if (await formModal({ title:'Nova recorrência', fields, initial:{ tipo:'pagar', periodicidade:'mensal', ativo:true, inicio: firstDay(monthKey()), tags:[] }, onSave: d => salvar(d) })) { toast('Criada.'); route(); } });
+  $$('[data-ed]').forEach(b => b.onclick = async () => { const r = rows.find(x => x.id === b.dataset.ed); if (await formModal({ title:'Editar recorrência', fields, initial:r, note:'Mudanças valem para os próximos meses gerados. O que já foi gerado não muda.', onSave: d => salvar(d, r.id) })) { toast('Salva.'); route(); } });
+  $('#gerar')?.addEventListener('click', () => gerarRecorrencias($('#gm').value));
+}
+
+// ----------------------------------------------------------- RELATÓRIOS ----
+async function viewRelatorios(){
+  const st = store.get('fin_filtro_dre') || { de: addMonths(monthKey(), -5), ate: monthKey(), por:'categoria', prev:false };
+  const render = async () => {
+    store.set('fin_filtro_dre', st);
+    const rows = await q(sb.from('vw_resultado_categoria').select('*').gte('mes', firstDay(st.de)).lte('mes', firstDay(st.ate)).limit(20000));
+    const meses = []; for (let m = st.de; m <= st.ate && meses.length < 24; m = addMonths(m, 1)) meses.push(firstDay(m));
+    const v = r => Number(r.realizado || 0) + (st.prev ? Number(r.previsto || 0) : 0);
+    const chave = r => st.por === 'categoria' ? r.categoria : r.centro_custo;
+    const grupoDe = r => st.por === 'categoria' ? r.grupo : (r.tipo === 'receber' ? 'Receitas' : 'Despesas');
+    const bloco = tipo => {
+      const rs = rows.filter(r => r.tipo === tipo);
+      const grupos = {};
+      rs.forEach(r => { const g = grupoDe(r), k = chave(r); grupos[g] ??= {}; grupos[g][k] ??= {}; grupos[g][k][r.mes] = (grupos[g][k][r.mes] || 0) + v(r); });
+      const totMes = m => rs.filter(r => r.mes === m).reduce((a,r) => a + v(r), 0);
+      return { grupos, totMes };
+    };
+    const rec = bloco('receber'), desp = bloco('pagar');
+    const linhaVals = obj => meses.map(m => html`<td class="r num small">${obj[m] ? money(obj[m]) : ''}</td>`);
+    const total = obj => meses.reduce((a,m) => a + (obj[m] || 0), 0);
+    const renderBloco = (b, nome, sinal) => html`<tr class="grp"><td>${nome}</td>${meses.map(m => html`<td class="r num">${money(b.totMes(m))}</td>`)}<td class="r num">${money(meses.reduce((a,m) => a + b.totMes(m), 0))}</td></tr>
+      ${Object.entries(b.grupos).sort((a,b2) => a[0].localeCompare(b2[0])).map(([g, itens]) => html`
+        ${st.por === 'categoria' ? html`<tr><td style="padding-left:16px;font-weight:500">${g}</td>${meses.map(m => html`<td class="r num small">${money(Object.values(itens).reduce((a,o) => a + (o[m] || 0), 0))}</td>`)}<td class="r num small">${money(Object.values(itens).reduce((a,o) => a + total(o), 0))}</td></tr>` : ''}
+        ${Object.entries(itens).sort((a,b2) => total(b2[1]) - total(a[1])).map(([k, o]) => html`<tr><td class="small muted" style="padding-left:${st.por === 'categoria' ? 32 : 16}px">${k}</td>${linhaVals(o)}<td class="r num small">${money(total(o))}</td></tr>`)}`)}`;
+    const res = m => rec.totMes(m) - desp.totMes(m);
+    view().innerHTML = html`<div class="head"><div><h1>Relatórios</h1><p>DRE gerencial por competência. Transferências e aportes ficam fora.</p></div>
+      <div class="row"><input type="month" id="rde" value="${st.de}"> até <input type="month" id="rate" value="${st.ate}">
+        <select id="rpor"><option value="categoria"${st.por === 'categoria' ? raw(' selected') : ''}>Por categoria</option><option value="centro"${st.por === 'centro' ? raw(' selected') : ''}>Por centro de custo</option></select>
+        <label class="row small"><input type="checkbox" id="rprev"${st.prev ? raw(' checked') : ''}> incluir previsto</label>
+        <button class="btn" id="rcsv">Baixar CSV</button></div></div>
+      <div class="card"><div class="tbl-wrap"><table class="dre"><thead><tr><th></th>${meses.map(m => html`<th class="r">${brMonth(m)}</th>`)}<th class="r">Total</th></tr></thead><tbody>
+        ${renderBloco(rec, 'Receitas', 1)}${renderBloco(desp, 'Despesas', -1)}
+        <tr class="tot"><td>Resultado</td>${meses.map(m => html`<td class="r num ${res(m) < 0 ? 'neg' : 'pos'}">${money(res(m))}</td>`)}<td class="r num">${money(meses.reduce((a,m) => a + res(m), 0))}</td></tr>
+      </tbody></table></div></div>`.s;
+    $('#rde').onchange = e => { st.de = e.target.value; render(); };
+    $('#rate').onchange = e => { st.ate = e.target.value; render(); };
+    $('#rpor').onchange = e => { st.por = e.target.value; render(); };
+    $('#rprev').onchange = e => { st.prev = e.target.checked; render(); };
+    $('#rcsv').onclick = () => {
+      const linhas = [['Tipo','Grupo', st.por === 'categoria' ? 'Categoria' : 'Centro de custo', ...meses.map(brMonth), 'Total']];
+      [['Receitas', rec], ['Despesas', desp]].forEach(([t, b]) => Object.entries(b.grupos).forEach(([g, itens]) => Object.entries(itens).forEach(([k, o]) => linhas.push([t, g, k, ...meses.map(m => (o[m] || 0).toFixed(2).replace('.',',')), total(o).toFixed(2).replace('.',',')]))));
+      baixar(`dre-${st.de}-a-${st.ate}.csv`, linhas.map(l => l.map(csvCell).join(';')).join('\r\n'));
+    };
+  };
+  await render();
+}
+
+// ------------------------------------------------------------- PROJETOS ----
+async function viewProjetos(){
+  const rows = await q(sb.from('vw_projetos').select('*').order('ativo', { ascending:false }).order('nome'));
+  const fields = [
+    { key:'nome', label:'Nome', required:true }, { key:'tag', label:'Tag nos lançamentos', hint:'Ex.: PE - Master Fluxo. Lançamentos com essa tag entram no projeto.' },
+    { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'evento',label:'Evento'},{value:'lancamento',label:'Lançamento'},{value:'produto',label:'Produto'},{value:'outro',label:'Outro'}] },
+    { key:'orcamento_despesa', label:'Orçamento de despesa (R$)', type:'money' }, { key:'meta_receita', label:'Meta de receita (R$)', type:'money' },
+    { key:'data_inicio', label:'Início', type:'date' }, { key:'data_fim', label:'Fim', type:'date' }, { key:'ativo', label:'Ativo', type:'bool' },
+  ];
+  const salvar = async (d, id) => { const o = {}; fields.forEach(f => o[f.key] = d[f.key] ?? (['orcamento_despesa','meta_receita'].includes(f.key) ? 0 : null)); if (id) await q(sb.from('projetos').update(o).eq('id', id)); else await q(sb.from('projetos').insert(o)); await loadLookups(); };
+  view().innerHTML = html`<div class="head"><div><h1>Projetos e eventos</h1><p>Orçado × realizado. Um lançamento entra no projeto pelo campo “Projeto” ou pela tag.</p></div>${isFin() ? html`<button class="btn pri" id="novo">+ Novo</button>` : ''}</div>
+    <div class="card">${rows.length ? html`<div class="tbl-wrap"><table><thead><tr><th>Projeto</th><th class="r">Orçamento</th><th class="r">Gasto</th><th class="r">Previsto</th><th style="width:180px">Consumo</th><th class="r">Receita</th><th></th></tr></thead><tbody>
+      ${rows.map(p => { const gasto = +p.despesa_realizada, orc = +p.orcamento_despesa, pct = orc ? (gasto + +p.despesa_prevista) / orc : 0;
+        return html`<tr style="${p.ativo ? '' : 'opacity:.55'}"><td><div>${p.nome}</div><div class="small muted">${p.tag || 'sem tag'} · ${p.tipo}</div></td>
+          <td class="r num">${orc ? money(orc) : html`<span class="muted small">definir</span>`}</td><td class="r num">${money(gasto)}</td><td class="r num muted">${money(p.despesa_prevista)}</td>
+          <td>${orc ? html`<div class="bar"><i class="${pct > 1 ? 'over' : ''}" style="width:${Math.min(100, pct*100).toFixed(0)}%"></i></div><div class="small ${pct > 1 ? 'neg' : 'muted'}">${(pct*100).toFixed(0)}% do orçamento</div>` : html`<span class="small muted">—</span>`}</td>
+          <td class="r num pos">${money(p.receita_realizada)}</td><td class="r">${isFin() ? html`<button class="btn sm" data-ed="${p.id}">Editar</button>` : ''}</td></tr>`; })}
+    </tbody></table></div>` : html`<div class="empty">Nenhum projeto.</div>`}</div>`.s;
+  $('#novo')?.addEventListener('click', async () => { if (await formModal({ title:'Novo projeto', fields, initial:{ tipo:'evento', ativo:true }, onSave: d => salvar(d) })) route(); });
+  $$('[data-ed]').forEach(b => b.onclick = async () => { const p = rows.find(x => x.id === b.dataset.ed); if (await formModal({ title:'Editar projeto', fields, initial:p, onSave: d => salvar(d, p.id) })) route(); });
+}
+
+// ------------------------------------------------------- CUSTO PESSOAS ----
+async function viewPessoas(){
+  const rows = await q(sb.from('vw_custo_pessoas').select('*').order('custo_mensal', { ascending:false, nullsFirst:false }));
+  const tot = t => rows.filter(r => r.tipo === t).reduce((a,r) => a + Number(r.custo_mensal || 0), 0);
+  const enc = S.params?.percentual_encargos_clt ?? 35.8;
+  view().innerHTML = html`<div class="head"><div><h1>Custo de pessoas</h1><p>Custo mensal cheio de quem está ativo no cadastro.</p></div></div>
+    <div class="kpis"><div class="card kpi"><div class="l">PJ (valor combinado)</div><div class="v">${money(tot('pj'))}</div><div class="s">${rows.filter(r => r.tipo === 'pj').length} prestadores</div></div>
+      <div class="card kpi"><div class="l">CLT (com encargos e provisões)</div><div class="v">${money(tot('clt'))}</div><div class="s">${rows.filter(r => r.tipo === 'clt').length} pessoas · encargos ${String(enc).replace('.',',')}%</div></div>
+      <div class="card kpi"><div class="l">Total</div><div class="v">${money(tot('pj') + tot('clt') + tot('socio'))}</div><div class="s">sócios: ${money(tot('socio'))}</div></div></div>
+    <div class="note info" style="margin-bottom:14px">CLT = salário × (1 + encargos) × (1 + 1/12 de 13º + 1,333/12 de férias com 1/3). Os encargos incidem também sobre 13º e férias — por isso o custo real passa de 1,5× o salário. Ajuste o percentual em Parâmetros.</div>
+    <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Nome</th><th>Tipo</th><th>Centro</th><th class="r">Base mensal</th><th class="r">Custo mensal</th></tr></thead><tbody>
+      ${rows.map(r => html`<tr><td>${r.nome}</td><td>${r.tipo.toUpperCase()}</td><td class="small muted">${r.centro_custo || '—'}</td><td class="r num">${money(r.base_mensal)}</td><td class="r num">${r.custo_mensal == null ? html`<span class="small muted">preencher valor</span>` : money(r.custo_mensal)}</td></tr>`)}
+    </tbody></table></div></div>`.s;
+}
+
+// ------------------------------------------------------------ CADASTROS ----
+async function viewCadastros(){
+  const st = store.get('fin_cad') || { aba:'fornecedores', busca:'' };
+  const defs = {
+    fornecedores: { titulo:'Pessoas e fornecedores', tabela:'fornecedores', lista:() => S.lk.fornecedores,
+      cols:[['nome','Nome'],['tipo','Tipo', v => v.toUpperCase()],['email','E-mail (acesso ao portal)', v => v || html`<span class="muted small">—</span>`],['valor_mensal','Valor mensal', money],['exige_nf','Exige NF', v => v ? 'sim' : '']],
+      fields:[{ key:'nome', label:'Nome', required:true }, { key:'tipo', label:'Tipo', type:'select', required:true, options:[['pj','PJ'],['clt','CLT'],['socio','Sócio'],['fornecedor','Fornecedor'],['cliente','Cliente']].map(([value,label]) => ({value,label})) },
+        { key:'email', label:'E-mail', type:'email', hint:'PJ: o mesmo e-mail que ele vai usar para criar o acesso ao portal' }, { key:'documento', label:'CNPJ / CPF' },
+        { key:'chave_pix', label:'Chave PIX' }, { key:'telefone', label:'Telefone' },
+        { key:'valor_mensal', label:'Valor mensal combinado (PJ)', type:'money' }, { key:'salario_bruto', label:'Salário bruto (CLT)', type:'money' },
+        { key:'dia_pagamento', label:'Dia de pagamento', type:'number', min:1, max:31 }, { key:'categoria_padrao_id', label:'Categoria padrão', type:'select', options:() => opts(S.lk.categorias) },
+        { key:'centro_custo_padrao_id', label:'Centro de custo padrão', type:'select', options:() => opts(S.lk.centros) }, { key:'conta_padrao_id', label:'Conta padrão', type:'select', options:() => opts(S.lk.contas) },
+        { key:'dados_bancarios', label:'Dados bancários', type:'textarea' }, { key:'observacoes', label:'Observações', type:'textarea' },
+        { key:'exige_nf', label:'Exige nota fiscal para pagar (aparece no portal e no “quem não enviou”)', type:'bool', full:true }, { key:'ativo', label:'Ativo', type:'bool' }] },
+    categorias: { titulo:'Categorias', tabela:'categorias', lista:() => S.lk.categorias, cols:[['nome','Nome'],['tipo','Tipo'],['grupo','Grupo']],
+      fields:[{ key:'nome', label:'Nome', required:true }, { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'despesa',label:'Despesa'},{value:'receita',label:'Receita'},{value:'neutra',label:'Neutra (fora do resultado)'}] }, { key:'grupo', label:'Grupo (linha do DRE)' }, { key:'ativo', label:'Ativa', type:'bool' }] },
+    centros: { titulo:'Centros de custo', tabela:'centros_custo', lista:() => S.lk.centros, cols:[['nome','Nome']], fields:[{ key:'nome', label:'Nome', required:true }, { key:'ativo', label:'Ativo', type:'bool' }] },
+    contas: { titulo:'Contas e cartões', tabela:'contas_bancarias', lista:() => S.lk.contas, cols:[['nome','Nome'],['tipo','Tipo'],['saldo_inicial','Saldo inicial', money],['data_saldo_inicial','Em', brDate],['dia_vencimento','Cartão: fecha/vence', (v, x) => x.tipo === 'cartao' ? `dia ${x.dia_fechamento ?? '?'} / dia ${v ?? '?'}` : '']],
+      fields:[{ key:'nome', label:'Nome', required:true }, { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'corrente',label:'Conta corrente'},{value:'investimento',label:'Investimento'},{value:'cartao',label:'Cartão de crédito'},{value:'caixa',label:'Caixa'}] },
+        { key:'saldo_inicial', label:'Saldo inicial (R$)', type:'money', hint:'Conta corrente: saldo do extrato no dia abaixo' }, { key:'data_saldo_inicial', label:'Data do saldo inicial', type:'date', hint:'Só lançamentos pagos a partir dessa data somam no saldo' },
+        { key:'final_cartao', label:'Cartão: 4 últimos dígitos' }, { key:'conta_pagamento_id', label:'Cartão: conta que paga a fatura', type:'select', options:() => opts(contasCorrentes()) },
+        { key:'dia_fechamento', label:'Cartão: dia do fechamento', type:'number', min:1, max:31, hint:'Compras a partir deste dia vão para a fatura seguinte' }, { key:'dia_vencimento', label:'Cartão: dia do vencimento', type:'number', min:1, max:31 },
+        { key:'ativo', label:'Ativa', type:'bool' }] },
+    regras: { titulo:'Regras do extrato', tabela:'regras_classificacao', lista:() => S.lk.regras.map(r => ({ ...r, nome: r.padrao })),
+      cols:[['padrao','Quando o extrato contiver'],['tipo','Tipo', v => v === 'pagar' ? 'saída' : 'entrada'],['categoria_id','Categoria', v => S.lk.categorias.find(c => c.id === v)?.nome || '—'],['auto_conciliar','Automática', v => v ? 'sim' : '']],
+      fields:[{ key:'padrao', label:'Quando o texto do extrato contiver', required:true, hint:'Sem diferenciar maiúsculas. Ex.: TAR PACOTE, IOF, HOTMART' },
+        { key:'tipo', label:'Tipo', type:'select', required:true, options:[{value:'pagar',label:'Saída'},{value:'receber',label:'Entrada'}] },
+        { key:'descricao', label:'Descrição do lançamento' }, { key:'categoria_id', label:'Categoria', type:'select', required:true, options:() => opts(S.lk.categorias) },
+        { key:'centro_custo_id', label:'Centro de custo', type:'select', options:() => opts(S.lk.centros) }, { key:'fornecedor_id', label:'Fornecedor', type:'select', options:() => opts(S.lk.fornecedores) },
+        { key:'auto_conciliar', label:'Criar e conciliar sozinho na conciliação automática', type:'bool', full:true }, { key:'ativo', label:'Ativa', type:'bool' }] },
+  };
+  const render = () => {
+    store.set('fin_cad', st);
+    const d = defs[st.aba];
+    const b = st.busca.toLowerCase();
+    const lista = d.lista().filter(x => !b || JSON.stringify(x).toLowerCase().includes(b));
+    view().innerHTML = html`<div class="head"><div><h1>Cadastros</h1></div>${isFin() ? html`<button class="btn pri" id="novo">+ Novo</button>` : ''}</div>
+      <div class="tabs">${Object.entries(defs).map(([k, v]) => html`<button data-aba="${k}" class="${st.aba === k ? 'on' : ''}">${v.titulo}</button>`)}</div>
+      <div class="card"><div class="filters"><input id="cb" class="grow" placeholder="Buscar" value="${st.busca}"><span class="small muted">${lista.length} registro(s)</span></div>
+      <div class="tbl-wrap"><table><thead><tr>${d.cols.map(c => html`<th>${c[1]}</th>`)}<th></th></tr></thead><tbody>
+        ${lista.map(x => html`<tr style="${x.ativo === false ? 'opacity:.5' : ''}">${d.cols.map(([k,,f]) => html`<td>${f ? f(x[k], x) : x[k]}</td>`)}<td class="r">${isFin() ? html`<button class="btn sm" data-ed="${x.id}">Editar</button>` : ''}</td></tr>`)}
+      </tbody></table></div></div>`.s;
+    $$('[data-aba]').forEach(bt => bt.onclick = () => { st.aba = bt.dataset.aba; st.busca = ''; render(); });
+    let tm; $('#cb').oninput = e => { clearTimeout(tm); tm = setTimeout(() => { st.busca = e.target.value; render(); $('#cb').focus(); $('#cb').setSelectionRange(99,99); }, 250); };
+    const salvar = async (dados, id) => { const o = {}; d.fields.forEach(f => o[f.key] = dados[f.key] ?? (f.type === 'money' && f.key === 'saldo_inicial' ? 0 : null)); if (o.email) o.email = o.email.trim().toLowerCase(); if (id) await q(sb.from(d.tabela).update(o).eq('id', id)); else await q(sb.from(d.tabela).insert(o)); await loadLookups(); };
+    $('#novo')?.addEventListener('click', async () => { if (await formModal({ title:`Novo — ${d.titulo}`, fields:d.fields, initial:{ ativo:true, auto_conciliar:true, tipo: st.aba === 'fornecedores' ? 'pj' : st.aba === 'categorias' ? 'despesa' : st.aba === 'contas' ? 'corrente' : st.aba === 'regras' ? 'pagar' : undefined, exige_nf: st.aba === 'fornecedores' }, onSave: x => salvar(x) })) { toast('Criado.'); render(); } });
+    $$('[data-ed]').forEach(bt => bt.onclick = async () => { const x = d.lista().find(y => y.id === bt.dataset.ed); if (await formModal({ title:`Editar — ${x.nome || x.padrao}`, fields:d.fields, initial:x, onSave: y => salvar(y, x.id) })) { toast('Salvo.'); render(); } });
+  };
+  render();
+}
+
+// ------------------------------------------------------------- EXPORTAR ----
+// CSV no mesmo formato do export do Granatum: ; como separador, vírgula decimal,
+// data dd/mm/aaaa, valor negativo para saída e codificação Windows-1252
+// (é o que o Granatum/Excel em português esperam — UTF-8 vira "ProfissionÃ£o").
+const CP1252 = {'€':0x80,'‚':0x82,'ƒ':0x83,'„':0x84,'…':0x85,'†':0x86,'‡':0x87,'ˆ':0x88,'‰':0x89,'Š':0x8A,'‹':0x8B,'Œ':0x8C,'Ž':0x8E,'‘':0x91,'’':0x92,'“':0x93,'”':0x94,'•':0x95,'–':0x96,'—':0x97,'˜':0x98,'™':0x99,'š':0x9A,'›':0x9B,'œ':0x9C,'ž':0x9E,'Ÿ':0x9F};
+const toCp1252 = s => Uint8Array.from([...s], c => { const n = c.charCodeAt(0); return n < 128 || (n >= 160 && n < 256) ? n : (CP1252[c] ?? 63); });
+const csvCell = v => { v = v == null ? '' : String(v); return /[;"\r\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; };
+function baixar(nome, texto, cp=true){
+  const blob = new Blob([cp ? toCp1252(texto) : texto], { type:'text/csv;charset=' + (cp ? 'windows-1252' : 'utf-8') });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function viewExportar(){
+  view().innerHTML = html`<div class="head"><div><h1>Exportar planilha</h1><p>CSV dos lançamentos pagos no período, nas mesmas colunas que vocês usavam no Granatum. Serve para o contador ou como cópia de segurança.</p></div></div>
+    <div class="card pad" style="max-width:640px"><div class="row" style="margin-bottom:12px"><label class="small muted">Pagos entre</label><input type="date" id="ede" value="${firstDay(monthKey())}"><label class="small muted">e</label><input type="date" id="eate" value="${today()}"></div>
+    <div class="row" style="margin-bottom:12px"><label class="row small"><input type="checkbox" id="erec" checked> incluir recebimentos no mesmo arquivo</label></div>
+    <p class="small muted">Só entram lançamentos com status <b>pago</b>. Desmarque a caixa acima para gerar só as saídas; os recebimentos podem sair num arquivo à parte.</p>
+    <div class="row"><button class="btn pri" id="exp">Baixar CSV</button><button class="btn" id="expr">Só recebimentos</button></div><div id="eres" class="small muted" style="margin-top:10px"></div></div>`.s;
+  const gerar = async (modo) => {
+    let qb = sb.from('vw_lancamentos').select('*').eq('status','pago').gte('data_pagamento', $('#ede').value).lte('data_pagamento', $('#eate').value).order('data_pagamento').limit(10000);
+    if (modo === 'receber') qb = qb.eq('tipo','receber'); else if (!$('#erec').checked) qb = qb.eq('tipo','pagar');
+    const rows = await q(qb);
+    if (!rows.length) return toast('Nenhum lançamento pago nesse período.', true);
+    const head = ['Descrição','Valor','Categoria','Forma de pagamento','Data de pagamento','Cliente/Fornecedor','Centro de custo/lucro','Custo nível de produção','Conta','Tags','Periodicidade','Parcelas'];
+    const linhas = rows.map(l => [l.descricao, (l.tipo === 'pagar' ? -1 : 1) * Number(l.valor), l.categoria, '', brDate(l.data_pagamento), l.fornecedor, l.centro_custo,
+      l.custo_nivel === 'fixo' ? 'Fixo' : l.custo_nivel === 'variavel' ? 'Variável' : '', l.conta, (l.tags || []).join(', '), l.recorrencia_id ? 'Mensal' : '', l.recorrencia_id ? 'Sempre' : '1']
+      .map((v, i) => i === 1 ? String(v.toFixed(2)).replace('.',',').replace(/,00$/,'') : v));
+    const semCat = rows.filter(r => !r.categoria).length;
+    baixar(`lancamentos-${modo === 'receber' ? 'recebimentos-' : ''}${$('#ede').value}-a-${$('#eate').value}.csv`, [head, ...linhas].map(l => l.map(csvCell).join(';')).join('\r\n'));
+    $('#eres').textContent = `${rows.length} linhas exportadas.` + (semCat ? ` ${semCat} sem categoria — revise antes de importar.` : '');
+  };
+  $('#exp').onclick = () => gerar('tudo').catch(e => toast(errMsg(e), true));
+  $('#expr').onclick = () => gerar('receber').catch(e => toast(errMsg(e), true));
+}
+
+// ------------------------------------------------------------- USUÁRIOS ----
+async function viewUsuarios(){
+  const rows = await q(sb.from('perfis').select('*').order('papel').order('nome'));
+  view().innerHTML = html`<div class="head"><div><h1>Usuários</h1><p>Quem cria login entra como “colaborador”. Promova a equipe interna aqui.</p></div></div>
+    <div class="note info" style="margin-bottom:14px">PJ não precisa de nada aqui: basta o e-mail dele estar no cadastro (Cadastros → Pessoas e fornecedores) que o vínculo é automático. Use o campo “vinculado a” só para corrigir casos em que o e-mail do login é diferente do cadastro.</div>
+    <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Nome</th><th>E-mail</th><th>Papel</th><th>Vinculado a (PJ)</th></tr></thead><tbody>
+      ${rows.map(p => html`<tr><td>${p.nome || '—'}</td><td class="small">${p.email}</td>
+        <td><select data-papel="${p.id}"${p.id === S.perfil.id ? raw(' disabled title="Você não pode mudar o próprio papel"') : ''}>${['admin','financeiro','leitura','colaborador'].map(x => html`<option${p.papel === x ? raw(' selected') : ''}>${x}</option>`)}</select></td>
+        <td><select data-forn="${p.id}"><option value="">—</option>${S.lk.fornecedores.filter(f => ['pj','fornecedor'].includes(f.tipo)).map(f => html`<option value="${f.id}"${p.fornecedor_id === f.id ? raw(' selected') : ''}>${f.nome}</option>`)}</select></td></tr>`)}
+    </tbody></table></div></div>`.s;
+  $$('[data-papel]').forEach(s => s.onchange = async () => { try { await q(sb.from('perfis').update({ papel:s.value }).eq('id', s.dataset.papel)); toast('Papel atualizado.'); } catch(e) { toast(errMsg(e), true); } });
+  $$('[data-forn]').forEach(s => s.onchange = async () => { try { await q(sb.from('perfis').update({ fornecedor_id:s.value || null }).eq('id', s.dataset.forn)); toast('Vínculo atualizado.'); } catch(e) { toast(errMsg(e), true); } });
+}
+
+// ----------------------------------------------------------- PARÂMETROS ----
+async function viewParametros(){
+  const p = S.params;
+  view().innerHTML = html`<div class="head"><div><h1>Parâmetros</h1></div><button class="btn pri" id="ed">Editar</button></div>
+    <div class="card pad" style="max-width:640px">
+      <div class="list-item"><span>Encargos sobre folha CLT</span><b class="num">${String(p.percentual_encargos_clt).replace('.',',')}%</b></div>
+      <div class="list-item"><span>Dia padrão de pagamento de NF</span><b>${p.dia_pagamento_nf}</b></div>
+      <div class="list-item"><span>Prazo para o PJ enviar a NF</span><b>dia ${p.dia_limite_envio_nf}</b></div>
+      <div class="list-item" style="display:block"><div>Texto de instruções do portal</div><div class="muted small" style="margin-top:4px">${p.instrucoes_portal}</div></div></div>`.s;
+  $('#ed').onclick = async () => {
+    const ok = await formModal({ title:'Parâmetros', initial:p, fields:[
+      { key:'percentual_encargos_clt', label:'Encargos CLT (%)', type:'money', required:true, hint:'Lucro Real/Presumido ≈ 35,8%. Simples Nacional (anexos I–III) ≈ 8% (só FGTS)' },
+      { key:'dia_pagamento_nf', label:'Dia padrão de pagamento de NF', type:'number', min:1, max:31, required:true, hint:'Usado quando o PJ não tem dia próprio no cadastro' },
+      { key:'dia_limite_envio_nf', label:'Prazo de envio (dia do mês)', type:'number', min:1, max:31, required:true },
+      { key:'instrucoes_portal', label:'Instruções mostradas no portal', type:'textarea' }],
+      onSave: async d => { await q(sb.from('parametros').update(d).eq('id', true)); } });
+    if (ok) { S.params = await q(sb.from('parametros').select('*').maybeSingle()); toast('Salvo.'); route(); }
+  };
+}
+
+// ------------------------------------------------------------ AUDITORIA ----
+async function viewAuditoria(){
+  const [rows, perfis] = await Promise.all([q(sb.from('auditoria').select('*').order('em', { ascending:false }).limit(200)), q(sb.from('perfis').select('id,nome,email'))]);
+  const quem = id => { const p = perfis.find(x => x.id === id); return p ? (p.nome || p.email) : (id ? 'usuário removido' : 'sistema'); };
+  const resumo = a => { const o = a.depois || a.antes || {}; return o.descricao || o.nome || (o.numero ? 'NF ' + o.numero : '') || a.registro_id; };
+  const diff = a => { if (a.acao !== 'update') return ''; return Object.keys(a.depois).filter(k => !['updated_at'].includes(k) && JSON.stringify(a.antes[k]) !== JSON.stringify(a.depois[k])).map(k => `${k}: ${a.antes[k] ?? '∅'} → ${a.depois[k] ?? '∅'}`).join(' · '); };
+  view().innerHTML = html`<div class="head"><div><h1>Auditoria</h1><p>Últimas 200 alterações. Registrado pelo banco — não dá para apagar pela tela.</p></div></div>
+    <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Quando</th><th>Quem</th><th>O quê</th><th>Registro</th><th>Mudança</th></tr></thead><tbody>
+      ${rows.map(a => html`<tr><td class="small num">${new Date(a.em).toLocaleString('pt-BR')}</td><td class="small">${quem(a.usuario)}</td><td class="small">${a.acao} · ${a.tabela}</td><td class="small">${resumo(a)}</td><td class="small muted" style="max-width:420px">${diff(a)}</td></tr>`)}
+    </tbody></table></div></div>`.s;
+}
+
+// ============================================================================
+// PARTE 2 — O QUE O GRANATUM FAZIA: conciliação, cartões, comprovantes
+// ============================================================================
+const XLSX_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+const PDFJS_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+function loadScript(src){
+  if (document.querySelector(`script[src="${src}"]`)) return Promise.resolve();
+  return new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = () => rej(new Error('Não consegui carregar a biblioteca de leitura de arquivos. Verifique a internet e tente de novo.')); document.head.appendChild(s); });
+}
+async function lerPDF(file, ano){
+  await loadScript(PDFJS_SRC);
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
+  const pdf = await window.pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+  const linhas = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const tc = await (await pdf.getPage(p)).getTextContent();
+    const porY = new Map();
+    tc.items.forEach(it => { const y = Math.round(it.transform[5] / 2) * 2; if (!porY.has(y)) porY.set(y, []); porY.get(y).push(it); });
+    [...porY.entries()].sort((a, b) => b[0] - a[0]).forEach(([, its]) => linhas.push(its.sort((a, b) => a.transform[4] - b.transform[4]).map(i => i.str).join(' ').replace(/\s+/g, ' ').trim()));
+  }
+  const NUM = String.raw`-?\s?(?:R\$\s?)?\d{1,3}(?:\.\d{3})*,\d{2}\s?-?(?:\s?[DC])?`;
+  const re = new RegExp(String.raw`^(\d{1,2}[\/.]\d{1,2}(?:[\/.]\d{2,4})?|\d{1,2}\s?(?:de\s)?[A-Za-zç]{3})\s+(.+?)\s+(${NUM})(?:\s+(${NUM}))?$`, 'i');
+  const out = [];
+  for (const l of linhas) {
+    const m = l.match(re); if (!m) continue;
+    const data = parseData(m[1], ano); const desc = m[2].trim();
+    if (!data || PULAR.test(semAcento(desc))) continue;
+    const valor = parseNum(m[3]); if (!valor || isNaN(valor)) continue;
+    out.push({ data, descricao: desc, documento: null, valor, saldo: m[4] ? parseNum(m[4]) : null });
+  }
+  return { linhas: out, avisos: ['PDF lido pelo texto da página. Confira valores e sinais na prévia antes de importar — CSV/Excel é mais confiável.'] };
+}
+async function lerArquivo(file, ano){
+  const nome = file.name.toLowerCase();
+  if (nome.endsWith('.pdf')) return lerPDF(file, ano);
+  if (/\.(csv|txt)$/.test(nome)) {
+    const buf = await file.arrayBuffer(); let text;
+    try { text = new TextDecoder('utf-8', { fatal: true }).decode(buf); } catch { text = new TextDecoder('windows-1252').decode(buf); }
+    return tabelaParaExtrato(parseCSV(text.replace(/^﻿/, '')), ano);
+  }
+  await loadScript(XLSX_SRC);
+  const wb = window.XLSX.read(await file.arrayBuffer(), { type: 'array', cellDates: true });
+  let melhor = { linhas: [], avisos: [] };
+  for (const nomeAba of wb.SheetNames) {
+    const r = tabelaParaExtrato(window.XLSX.utils.sheet_to_json(wb.Sheets[nomeAba], { header: 1, raw: true, defval: '' }), ano);
+    if (r.linhas.length > melhor.linhas.length) melhor = r;
+  }
+  return melhor;
+}
+const contasCorrentes = () => S.lk.contas.filter(c => c.tipo !== 'cartao' && c.ativo !== false);
+const cartoes = () => S.lk.contas.filter(c => c.tipo === 'cartao');
+
+// Modal de importação (extrato de conta ou fatura de cartão)
+function modalImportar({ titulo, contaOpts, contaInicial, modoCartao=false, extraCampos='', onImport }){
+  return new Promise(resolve => {
+    const bg = document.createElement('div'); bg.className = 'modal-bg';
+    bg.innerHTML = html`<div class="modal" style="width:min(900px,100%)"><header><h2>${titulo}</h2><button class="btn sm" data-x>Fechar</button></header>
+      <div class="body" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="f"><label for="imp_conta">${modoCartao ? 'Cartão' : 'Conta'}</label><select id="imp_conta">${contaOpts.map(o => html`<option value="${o.value}"${o.value === contaInicial ? raw(' selected') : ''}>${o.label}</option>`)}</select></div>
+        ${raw(extraCampos)}
+        <div class="f"><label for="imp_ano">Ano (para datas sem ano)</label><input id="imp_ano" type="number" value="${new Date().getFullYear()}"></div>
+        <div class="f full"><label for="imp_arq">Arquivo do banco</label><input id="imp_arq" type="file" accept=".csv,.txt,.xls,.xlsx,.pdf"><span class="hint">CSV ou Excel exportado do internet banking (mais confiável) ou PDF.</span></div>
+        <div class="f full" id="imp_prev"></div>
+      </div>
+      <footer><button class="btn" data-x>Cancelar</button><button class="btn pri" id="imp_ok" disabled>Importar</button></footer></div>`.s;
+    document.body.appendChild(bg);
+    let lidas = [], sinal = 1;
+    const close = r => { bg.remove(); resolve(r); };
+    $$('[data-x]', bg).forEach(b => b.onclick = () => close(null));
+    const prev = $('#imp_prev', bg), ok = $('#imp_ok', bg);
+    const render = (avisos=[]) => {
+      if (!lidas.length) { prev.innerHTML = html`<div class="note neg">Não encontrei lançamentos nesse arquivo. Se for PDF, tente o CSV/Excel do mesmo período.</div>`.s; ok.disabled = true; return; }
+      const sel = lidas.filter(l => l.ok);
+      const ent = sel.filter(l => l.valor * sinal > 0).reduce((a, l) => a + l.valor * sinal, 0), sai = sel.filter(l => l.valor * sinal < 0).reduce((a, l) => a + l.valor * sinal, 0);
+      const datas = lidas.map(l => l.data).sort();
+      prev.innerHTML = html`${avisos.map(a => html`<div class="note" style="margin-bottom:8px">${a}</div>`)}
+        <div class="row small" style="justify-content:space-between;margin-bottom:6px"><span><b>${sel.length}</b> de ${lidas.length} linhas · ${brDate(datas[0])} a ${brDate(datas.at(-1))} · ${modoCartao ? html`compras <b class="neg">${money(Math.abs(sai))}</b> · estornos <b class="pos">${money(ent)}</b>` : html`entradas <b class="pos">${money(ent)}</b> · saídas <b class="neg">${money(Math.abs(sai))}</b>`}</span>
+        <button class="btn sm" id="imp_sinal" type="button">Inverter sinais</button></div>
+        <div class="tbl-wrap" style="max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:8px"><table><thead><tr><th><input type="checkbox" id="imp_all" checked></th><th>Data</th><th>Descrição</th><th class="r">Valor</th>${lidas.some(l => l.saldo != null) ? html`<th class="r">Saldo</th>` : ''}</tr></thead><tbody>
+        ${lidas.map((l, i) => html`<tr><td><input type="checkbox" data-i="${i}"${l.ok ? raw(' checked') : ''}></td><td class="num">${brDate(l.data)}</td><td>${l.descricao}</td><td class="r num ${l.valor * sinal < 0 ? 'neg' : 'pos'}">${money(l.valor * sinal)}</td>${lidas.some(x => x.saldo != null) ? html`<td class="r num muted">${l.saldo == null ? '' : money(l.saldo)}</td>` : ''}</tr>`)}
+        </tbody></table></div>
+        <div class="small muted" style="margin-top:6px">${modoCartao ? 'Compras aparecem em vermelho. Se estiverem verdes, use “Inverter sinais”.' : 'Saídas aparecem em vermelho. Se o banco exportou ao contrário, use “Inverter sinais”.'} Linhas já importadas antes são ignoradas automaticamente.</div>`.s;
+      $$('[data-i]', prev).forEach(c => c.onchange = () => { lidas[+c.dataset.i].ok = c.checked; render(avisos); });
+      $('#imp_all', prev).onchange = e => { lidas.forEach(l => l.ok = e.target.checked); render(avisos); };
+      $('#imp_sinal', prev).onclick = () => { sinal *= -1; render(avisos); };
+      ok.disabled = !sel.length; ok.textContent = `Importar ${sel.length} linha(s)`;
+    };
+    $('#imp_arq', bg).onchange = async e => {
+      const f = e.target.files[0]; if (!f) return;
+      prev.innerHTML = html`<div class="muted">Lendo ${f.name}…</div>`.s; ok.disabled = true;
+      try { const r = await lerArquivo(f, +$('#imp_ano', bg).value); lidas = r.linhas.map(l => ({ ...l, ok: true })); sinal = 1;
+        if (modoCartao && lidas.length && lidas.filter(l => l.valor > 0).length > lidas.length / 2) sinal = -1; // fatura costuma vir com compras positivas
+        render(r.avisos); }
+      catch(err) { prev.innerHTML = html`<div class="note neg">${errMsg(err)}</div>`.s; }
+    };
+    ok.onclick = async () => {
+      ok.disabled = true; ok.textContent = 'Importando…';
+      try {
+        const arq = $('#imp_arq', bg).files[0];
+        const linhas = lidas.filter(l => l.ok).map(l => ({ ...l, valor: Math.round(l.valor * sinal * 100) / 100 }));
+        const r = await onImport({ conta: $('#imp_conta', bg).value, linhas, arquivo: arq?.name, formato: arq?.name.split('.').pop(), bg });
+        close(r ?? true);
+      } catch(err) { toast(errMsg(err), true); ok.disabled = false; ok.textContent = 'Importar'; }
+    };
+  });
+}
+
+// ------------------------------------------------------------- anexos ----
+async function modalAnexos({ lancamentoId=null, faturaId=null, titulo }){
+  const bg = document.createElement('div'); bg.className = 'modal-bg';
+  document.body.appendChild(bg);
+  const close = () => bg.remove();
+  const render = async () => {
+    let qb = sb.from('anexos').select('*').order('created_at');
+    qb = lancamentoId ? qb.eq('lancamento_id', lancamentoId) : qb.eq('fatura_id', faturaId);
+    const rows = await q(qb);
+    bg.innerHTML = html`<div class="modal"><header><h2>${titulo}</h2><button class="btn sm" data-x>Fechar</button></header>
+      <div class="body" style="grid-template-columns:1fr">
+        ${rows.length ? rows.map(a => html`<div class="list-item"><div><span class="pill p-previsto">${a.tipo.replace('_',' ')}</span> ${a.arquivo_nome}<div class="small muted">${new Date(a.created_at).toLocaleString('pt-BR')}</div></div>
+          <div class="row"><button class="btn sm" data-abrir="${a.arquivo_path}">Abrir</button>${isFin() ? html`<button class="btn sm danger" data-del="${a.id}">Excluir</button>` : ''}</div></div>`) : html`<div class="empty">Nenhum arquivo anexado.</div>`}
+        ${isFin() ? html`<div class="row" style="border-top:1px solid var(--line);padding-top:12px">
+          <select id="ax_tipo">${[['comprovante','Comprovante'],['boleto','Boleto'],['nota_fiscal','Nota fiscal'],['contrato','Contrato'],['outro','Outro']].map(([v,l]) => html`<option value="${v}">${l}</option>`)}</select>
+          <input type="file" id="ax_arq" accept=".pdf,.png,.jpg,.jpeg,.xml" class="grow"><button class="btn pri" id="ax_ok">Anexar</button></div>` : ''}
+      </div></div>`.s;
+    $$('[data-x]', bg).forEach(b => b.onclick = close);
+    $$('[data-abrir]', bg).forEach(b => b.onclick = () => abrirArquivo(b.dataset.abrir, 'anexos'));
+    $$('[data-del]', bg).forEach(b => b.onclick = async () => { const a = rows.find(x => x.id === b.dataset.del);
+      try { await q(sb.from('anexos').delete().eq('id', a.id)); await sb.storage.from('anexos').remove([a.arquivo_path]); render(); } catch(e) { toast(errMsg(e), true); } });
+    $('#ax_ok', bg)?.addEventListener('click', async () => {
+      const f = $('#ax_arq', bg).files[0]; if (!f) return toast('Escolha um arquivo.', true);
+      if (f.size > 15 * 1024 * 1024) return toast('Arquivo maior que 15 MB.', true);
+      const nome = f.name.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^\w.\-]+/g,'_').slice(-80);
+      const path = `${lancamentoId ? 'lanc/' + lancamentoId : 'fatura/' + faturaId}/${Date.now()}-${nome}`;
+      try {
+        const { error } = await sb.storage.from('anexos').upload(path, f, { contentType: f.type || undefined }); if (error) throw error;
+        await q(sb.from('anexos').insert({ lancamento_id: lancamentoId, fatura_id: faturaId, tipo: $('#ax_tipo', bg).value, arquivo_path: path, arquivo_nome: f.name }));
+        toast('Anexado.'); render();
+      } catch(e) { toast(errMsg(e), true); }
+    });
+  };
+  bg.addEventListener('mousedown', e => { if (e.target === bg) close(); });
+  await render();
+}
+
+// --------------------------------------------------------- CONCILIAÇÃO ----
+async function viewConciliacao(){
+  const contas = contasCorrentes();
+  if (!contas.length) { view().innerHTML = html`<div class="empty">Cadastre uma conta bancária em Cadastros → Contas e cartões.</div>`.s; return; }
+  const st = store.get('fin_conc') || {};
+  if (!contas.some(c => c.id === st.conta)) st.conta = contas[0].id;
+  st.aba ??= 'pendente'; st.page ??= 0;
+  const render = async () => {
+    store.set('fin_conc', st);
+    const saldos = await q(sb.from('vw_saldo_contas').select('*').neq('tipo', 'cartao'));
+    const sc = saldos.find(s => s.id === st.conta) || {};
+    const PG = 40;
+    let qb = sb.from('vw_extrato').select('*', { count:'exact' }).eq('conta_id', st.conta).eq('status', st.aba);
+    if (st.mes) qb = qb.gte('data', firstDay(st.mes)).lte('data', lastDay(st.mes));
+    const { data:rows, count } = await q(qb.order('data', { ascending: st.aba === 'pendente' }).order('created_at').range(st.page * PG, st.page * PG + PG - 1));
+    const dif = sc.saldo_extrato != null ? Number(sc.saldo_atual) - Number(sc.saldo_extrato) : null;
+    view().innerHTML = html`
+      <div class="head"><div><h1>Conciliação bancária</h1><p>Importe o extrato e ligue cada linha ao lançamento que ela paga. O extrato manda: data e valor vêm dele.</p></div>
+        ${isFin() ? html`<div class="row"><button class="btn" id="auto">Conciliar automaticamente</button><button class="btn pri" id="imp">Importar extrato</button></div>` : ''}</div>
+      <div class="tabs">${contas.map(c => { const s = saldos.find(x => x.id === c.id); return html`<button data-conta="${c.id}" class="${st.conta === c.id ? 'on' : ''}">${c.nome}${s?.pendentes ? html` <span class="badge">${s.pendentes}</span>` : ''}</button>`; })}</div>
+      <div class="kpis">
+        <div class="card kpi"><div class="l">Saldo no sistema</div><div class="v">${money(sc.saldo_atual)}</div><div class="s">${sc.data_saldo_inicial ? 'desde ' + brDate(sc.data_saldo_inicial) : html`<a href="#/cadastros">defina o saldo inicial</a>`}</div></div>
+        <div class="card kpi"><div class="l">Saldo no banco</div><div class="v">${sc.saldo_extrato == null ? '—' : money(sc.saldo_extrato)}</div><div class="s">${sc.data_extrato ? 'último extrato: ' + brDate(sc.data_extrato) : 'nenhum extrato importado'}</div></div>
+        <div class="card kpi"><div class="l">Diferença</div><div class="v ${dif == null ? '' : Math.abs(dif) < 0.01 ? 'ok' : 'neg'}">${dif == null ? '—' : Math.abs(dif) < 0.01 ? 'Bateu' : money(dif)}</div><div class="s">${dif == null ? 'o arquivo precisa ter a coluna de saldo' : Math.abs(dif) < 0.01 ? 'conta conciliada' : 'sistema − banco'}</div></div>
+        <div class="card kpi"><div class="l">Linhas pendentes</div><div class="v">${sc.pendentes ?? 0}</div><div class="s">para conciliar ou ignorar</div></div>
+      </div>
+      <div class="card">
+        <div class="filters"><div class="row grow">${[['pendente','Pendentes'],['conciliado','Conciliadas'],['ignorado','Ignoradas']].map(([k,l]) => html`<button class="btn sm${st.aba === k ? raw(' pri') : ''}" data-aba="${k}">${l}</button>`)}</div>
+          <input type="month" id="cmes" value="${st.mes || ''}" title="Filtrar mês">${st.mes ? html`<button class="btn sm" id="cmes_x">Todos os meses</button>` : ''}</div>
+        <div id="clista">${rows.length ? '' : html`<div class="empty">${st.aba === 'pendente' ? (sc.data_extrato ? 'Tudo conciliado nesta conta. 👏' : 'Importe o extrato desta conta para começar.') : 'Nada por aqui.'}</div>`}</div>
+        <div class="pager"><span>${count} linha(s)</span><div class="row"><button class="btn sm" id="cprev"${st.page ? '' : raw(' disabled')}>‹</button><span>pág. ${st.page + 1} de ${Math.max(1, Math.ceil(count / PG))}</span><button class="btn sm" id="cnext"${(st.page + 1) * PG < count ? '' : raw(' disabled')}>›</button></div></div>
+      </div>`.s;
+    $$('[data-conta]').forEach(b => b.onclick = () => { st.conta = b.dataset.conta; st.page = 0; render(); });
+    $$('[data-aba]').forEach(b => b.onclick = () => { st.aba = b.dataset.aba; st.page = 0; render(); });
+    $('#cmes').onchange = e => { st.mes = e.target.value; st.page = 0; render(); };
+    $('#cmes_x')?.addEventListener('click', () => { st.mes = ''; render(); });
+    $('#cprev').onclick = () => { st.page--; render(); }; $('#cnext').onclick = () => { st.page++; render(); };
+    $('#imp')?.addEventListener('click', async () => {
+      const r = await modalImportar({ titulo:'Importar extrato', contaOpts: contas.map(c => ({ value:c.id, label:c.nome })), contaInicial: st.conta,
+        onImport: async ({ conta, linhas, arquivo, formato }) => {
+          const chaves = chavesExtrato(linhas); const datas = linhas.map(l => l.data).sort();
+          const imp = await q(sb.from('extrato_importacoes').insert({ conta_id:conta, arquivo_nome:arquivo, formato, inicio:datas[0], fim:datas.at(-1) }).select().single());
+          let novas = 0;
+          for (let i = 0; i < linhas.length; i += 500) {
+            const lote = linhas.slice(i, i + 500).map((l, j) => ({ conta_id:conta, importacao_id:imp.id, data:l.data, descricao:l.descricao, documento:l.documento, valor:l.valor, saldo:l.saldo, hash:chaves[i + j] }));
+            const ins = await q(sb.from('extrato_linhas').upsert(lote, { onConflict:'conta_id,hash', ignoreDuplicates:true }).select('id'));
+            novas += ins?.length || 0;
+          }
+          await q(sb.from('extrato_importacoes').update({ linhas_novas:novas, linhas_repetidas:linhas.length - novas }).eq('id', imp.id));
+          return { conta, novas, rep: linhas.length - novas };
+        } });
+      if (r) { st.conta = r.conta; st.aba = 'pendente'; st.page = 0; toast(`${r.novas} linha(s) nova(s)${r.rep ? `, ${r.rep} já existiam` : ''}. Rodando a conciliação automática…`);
+        await autoConciliar(); }
+    });
+    const autoConciliar = async () => {
+      try { const [r] = await q(sb.rpc('conciliar_automatico', { p_conta: st.conta })); toast(`Conciliadas automaticamente: ${r.por_valor} por valor e nome, ${r.por_regra} por regra.`); }
+      catch(e) { toast(errMsg(e), true); }
+      render();
+    };
+    $('#auto')?.addEventListener('click', autoConciliar);
+    if (rows.length) await renderLinhas(rows, st, render);
+  };
+  await render();
+}
+
+async function renderLinhas(rows, st, render){
+  const box = $('#clista');
+  const sugs = st.aba === 'pendente' ? await Promise.all(rows.map(r => q(sb.rpc('sugerir_conciliacao', { p_linha: r.id })).catch(() => []))) : [];
+  box.innerHTML = html`<div class="tbl-wrap"><table><thead><tr><th>Data</th><th>Extrato</th><th class="r">Valor</th><th>${st.aba === 'pendente' ? 'Sugestão' : st.aba === 'conciliado' ? 'Conciliado com' : 'Motivo'}</th><th></th></tr></thead><tbody>
+    ${rows.map((l, i) => { const s = sugs[i]?.[0];
+      return html`<tr><td class="num">${brDate(l.data)}</td><td><div>${l.descricao}</div>${l.documento ? html`<div class="small muted">doc ${l.documento}</div>` : ''}</td>
+        <td class="r num ${l.valor < 0 ? 'neg' : 'pos'}">${money(l.valor)}</td>
+        <td style="min-width:240px">${st.aba === 'pendente' ? (s ? html`<div class="small"><b>${s.descricao}</b>${s.fornecedor ? ' · ' + s.fornecedor : ''}</div><div class="small ${s.valor_igual ? 'ok' : 'muted'}">${money(s.valor)} · ${s.dias === 0 ? 'mesmo dia' : s.dias + ' dia(s) de diferença'}${s.valor_igual ? ' · valor igual' : ''}</div>` : html`<span class="small muted">nenhum lançamento parecido</span>`)
+          : st.aba === 'conciliado' ? html`<span class="small">${l.conciliado_com || l.fatura || '—'}</span>` : html`<span class="small muted">${l.motivo_ignorado}</span>`}</td>
+        <td class="r">${isFin() ? html`<div class="row" style="justify-content:flex-end;flex-wrap:nowrap">${st.aba === 'pendente' ? html`
+          ${s ? html`<button class="btn sm ok" data-sug="${i}">Conciliar</button>` : ''}<button class="btn sm" data-buscar="${i}">${s ? 'Outro…' : 'Buscar…'}</button>
+          <button class="btn sm${s ? '' : raw(' pri')}" data-novo="${i}">Criar lançamento</button><button class="btn sm" data-ign="${i}" title="Ignorar (aplicação, transferência entre contas…)">Ignorar</button>` :
+          html`<button class="btn sm" data-desf="${i}">Desfazer</button>`}</div>` : ''}</td></tr>`; })}
+  </tbody></table></div>`.s;
+  const acao = async (fn, msg) => { try { await fn(); toast(msg); render(); } catch(e) { toast(errMsg(e), true); } };
+  $$('[data-sug]', box).forEach(b => b.onclick = () => { const i = +b.dataset.sug, s = sugs[i][0], l = rows[i];
+    acao(() => s.tipo === 'fatura' ? q(sb.rpc('conciliar_fatura', { p_linha:l.id, p_fatura:s.id })) : q(sb.rpc('conciliar', { p_linha:l.id, p_lancamentos:[s.id] })), 'Conciliado.'); });
+  $$('[data-desf]', box).forEach(b => b.onclick = async () => { const l = rows[+b.dataset.desf];
+    if (!await confirmar('Desfazer', st.aba === 'conciliado' ? 'A linha volta para pendente. Lançamentos criados a partir dela são apagados; os que já existiam voltam a ficar em aberto.' : 'A linha volta para pendente.')) return;
+    acao(() => q(sb.rpc('desconciliar', { p_linha:l.id })), 'Desfeito.'); });
+  $$('[data-ign]', box).forEach(b => b.onclick = async () => { const l = rows[+b.dataset.ign];
+    const ok = await formModal({ title:'Ignorar linha do extrato', note:`${brDate(l.data)} · ${l.descricao} · ${money(l.valor)}. Use para movimentos que não são receita nem despesa, como aplicação e resgate automáticos.`,
+      fields:[{ key:'m', label:'Motivo', required:true, placeholder:'' }], initial:{ m: /aplic|resg|invest|cdb/i.test(l.descricao) ? 'Aplicação/resgate automático' : '' }, saveLabel:'Ignorar',
+      onSave: d => q(sb.rpc('ignorar_linha', { p_linha:l.id, p_motivo:d.m })) });
+    if (ok) { toast('Ignorada.'); render(); } });
+  $$('[data-novo]', box).forEach(b => b.onclick = () => criarDaLinha(rows[+b.dataset.novo], render));
+  $$('[data-buscar]', box).forEach(b => b.onclick = () => buscarParaLinha(rows[+b.dataset.buscar], sugs[+b.dataset.buscar] || [], render));
+}
+
+async function criarDaLinha(l, depois){
+  const tipo = l.valor < 0 ? 'pagar' : 'receber';
+  const [s] = await q(sb.rpc('sugerir_classificacao', { p_texto: l.descricao, p_tipo: tipo })).catch(() => []) || [];
+  const catFilter = c => tipo === 'pagar' ? c.tipo !== 'receita' : c.tipo !== 'despesa';
+  const padrao = l.descricao.replace(/\d{2}\/\d{2}(\/\d{2,4})?/g, '').replace(/\b\d{3,}\b/g, '').replace(/\s+/g, ' ').trim().split(' ').slice(0, 3).join(' ');
+  const ok = await formModal({ title: tipo === 'pagar' ? 'Nova saída a partir do extrato' : 'Nova entrada a partir do extrato',
+    note: `${brDate(l.data)} · ${l.descricao} · ${money(l.valor)}${s ? ` — classificação sugerida ${s.origem === 'regra' ? 'pela regra cadastrada' : s.origem === 'fornecedor' ? 'pelo nome do fornecedor no texto' : 'pelo histórico'}` : ''}`,
+    initial: { descricao: s?.descricao || l.descricao, categoria_id: s?.categoria_id, centro_custo_id: s?.centro_custo_id, fornecedor_id: s?.fornecedor_id, projeto_id: s?.projeto_id, data_competencia: firstDay(l.data.slice(0,7)), regra: s?.origem === 'regra' ? '' : padrao },
+    fields: [
+      { key:'descricao', label:'Descrição', required:true, full:true },
+      { key:'categoria_id', label:'Categoria', type:'select', required:true, options:() => opts(S.lk.categorias, catFilter) },
+      { key:'centro_custo_id', label:'Centro de custo', type:'select', options:() => opts(S.lk.centros) },
+      { key:'fornecedor_id', label: tipo === 'pagar' ? 'Fornecedor / pessoa' : 'Cliente', type:'select', options:() => opts(S.lk.fornecedores) },
+      { key:'data_competencia', label:'Competência', type:'month', required:true },
+      { key:'projeto_id', label:'Projeto', type:'select', options:() => opts(S.lk.projetos) },
+      { key:'custo_nivel', label:'Nível de custo', type:'select', options:[{value:'fixo',label:'Fixo'},{value:'variavel',label:'Variável'}] },
+      { key:'regra', label:'Lembrar para as próximas vezes quando o extrato contiver…', full:true, hint:'Deixe em branco para não criar regra. Ex.: TAR PACOTE, IOF, HOTMART.' },
+    ], saveLabel:'Criar e conciliar',
+    onSave: async d => { const { regra, ...dados } = d; await q(sb.rpc('conciliar_novo', { p_linha:l.id, p_dados:dados, p_regra: regra || null })); if (regra) await loadLookups(); } });
+  if (ok) { toast('Lançamento criado e conciliado.'); depois(); }
+}
+
+async function buscarParaLinha(l, sugs, depois){
+  const tipo = l.valor < 0 ? 'pagar' : 'receber', alvo = Math.abs(l.valor);
+  const bg = document.createElement('div'); bg.className = 'modal-bg'; document.body.appendChild(bg);
+  const sel = new Map(); let lista = sugs.map(s => ({ ...s, _fatura: s.tipo === 'fatura' }));
+  const close = () => bg.remove();
+  const render = () => {
+    const soma = [...sel.values()].reduce((a, x) => a + Number(x.valor), 0);
+    const temFatura = [...sel.values()].some(x => x._fatura);
+    bg.innerHTML = html`<div class="modal" style="width:min(820px,100%)"><header><div><h2>Conciliar linha do extrato</h2><div class="small muted">${brDate(l.data)} · ${l.descricao} · <b class="${l.valor < 0 ? 'neg' : 'pos'}">${money(l.valor)}</b></div></div><button class="btn sm" data-x>Fechar</button></header>
+      <div class="body" style="grid-template-columns:1fr">
+        <div class="row"><input id="bq" class="grow" placeholder="Buscar por descrição, fornecedor ou valor (ex.: 9500)"><button class="btn" id="bgo">Buscar</button></div>
+        <div class="tbl-wrap" style="max-height:360px;overflow:auto"><table><thead><tr><th></th><th>Lançamento</th><th>Data</th><th class="r">Valor</th></tr></thead><tbody>
+          ${lista.length ? lista.map((x, i) => html`<tr><td><input type="checkbox" data-s="${i}"${sel.has(x.id) ? raw(' checked') : ''}></td><td><div>${x.descricao}</div><div class="small muted">${x._fatura ? 'fatura de cartão' : (x.fornecedor || '')}${x.situacao ? ' · ' + x.situacao : ''}</div></td><td class="num">${brDate(x.data)}</td><td class="r num">${money(x.valor)}</td></tr>`) : html`<tr><td colspan="4" class="empty">Nenhum candidato. Busque acima ou crie um lançamento.</td></tr>`}
+        </tbody></table></div>
+        <div class="note ${sel.size && Math.abs(soma - alvo) >= 0.01 && (sel.size > 1) ? 'neg' : 'info'}">${sel.size ? `Selecionado: ${money(soma)} de ${money(alvo)}` : 'Marque um lançamento, ou vários que somem o valor da linha (ex.: PIX em lote).'}${sel.size === 1 && Math.abs(soma - alvo) >= 0.01 && !temFatura ? ' — com um lançamento só, o valor dele passa a ser o do extrato.' : ''}</div>
+      </div>
+      <footer><button class="btn" data-x>Cancelar</button><button class="btn pri" id="bok"${sel.size && !(sel.size > 1 && Math.abs(soma - alvo) >= 0.01) && !(temFatura && sel.size > 1) ? '' : raw(' disabled')}>Conciliar</button></footer></div>`.s;
+    $$('[data-x]', bg).forEach(b => b.onclick = close);
+    $$('[data-s]', bg).forEach(c => c.onchange = () => { const x = lista[+c.dataset.s]; c.checked ? sel.set(x.id, x) : sel.delete(x.id); render(); });
+    const buscar = async () => {
+      const t = $('#bq', bg).value.trim(); if (!t) return;
+      let qb = sb.from('vw_lancamentos').select('id,descricao,valor,data_vencimento,data_pagamento,fornecedor,situacao').eq('tipo', tipo).is('extrato_linha_id', null).is('fatura_id', null).neq('status', 'cancelado');
+      const n = parseMoney(t);
+      qb = !isNaN(n) && /^[\d.,\sR$]+$/.test(t) ? qb.eq('valor', n) : qb.or(`descricao.ilike.*${t.replace(/[*,()]/g,' ')}*,fornecedor.ilike.*${t.replace(/[*,()]/g,' ')}*`);
+      const r = await q(qb.order('data_vencimento', { ascending:false }).limit(40));
+      lista = [...[...sel.values()], ...r.filter(x => !sel.has(x.id)).map(x => ({ ...x, data: x.data_pagamento || x.data_vencimento }))];
+      render(); $('#bq', bg).value = t;
+    };
+    $('#bgo', bg).onclick = buscar; $('#bq', bg).onkeydown = e => { if (e.key === 'Enter') buscar(); };
+    $('#bok', bg).onclick = async () => {
+      const xs = [...sel.values()];
+      try {
+        if (xs[0]._fatura) await q(sb.rpc('conciliar_fatura', { p_linha:l.id, p_fatura:xs[0].id }));
+        else await q(sb.rpc('conciliar', { p_linha:l.id, p_lancamentos: xs.map(x => x.id) }));
+        close(); toast('Conciliado.'); depois();
+      } catch(e) { toast(errMsg(e), true); }
+    };
+  };
+  bg.addEventListener('mousedown', e => { if (e.target === bg) close(); });
+  render();
+}
+
+// -------------------------------------------------------------- CARTÕES ----
+const pillFatura = f => { const s = f.status === 'paga' ? 'paga' : f.data_fechamento < today() ? 'fechada' : 'aberta';
+  return html`<span class="pill p-${{ paga:'paga', fechada:'aprovada', aberta:'enviada' }[s]}">${s}</span>`; };
+async function viewCartoes(){
+  const cs = cartoes().filter(c => c.ativo !== false);
+  if (!cs.length) { view().innerHTML = html`<div class="head"><div><h1>Cartões de crédito</h1></div></div><div class="card pad"><p>Nenhum cartão cadastrado. Crie em <a href="#/cadastros">Cadastros → Contas e cartões</a> com tipo “Cartão de crédito”.</p></div>`.s; return; }
+  const st = store.get('fin_cart') || {};
+  const abertas = await q(sb.from('vw_faturas').select('cartao_id,total').neq('status','paga'));
+  const emAberto = id => abertas.filter(f => f.cartao_id === id).reduce((a, f) => a + Number(f.total), 0);
+  cs.sort((a, b) => emAberto(b.id) - emAberto(a.id) || a.nome.localeCompare(b.nome));
+  if (!cs.some(c => c.id === st.cartao)) st.cartao = cs[0].id;
+  const render = async () => {
+    store.set('fin_cart', st);
+    const todas = await q(sb.from('vw_faturas').select('*').order('mes_vencimento', { ascending:false }));
+    const c = cs.find(x => x.id === st.cartao);
+    const fats = todas.filter(f => f.cartao_id === st.cartao);
+    if (!fats.some(f => f.id === st.fatura)) st.fatura = (fats.find(f => f.status !== 'paga' && f.mes_vencimento <= firstDay(addMonths(monthKey(), 1))) || fats[0])?.id;
+    const fa = fats.find(f => f.id === st.fatura);
+    const itens = fa ? await q(sb.from('vw_lancamentos').select('*').eq('fatura_id', fa.id).order('data_documento', { nullsFirst:false }).order('descricao')) : [];
+    const aberto = id => todas.filter(f => f.cartao_id === id && f.status !== 'paga').reduce((a, f) => a + Number(f.total), 0);
+    view().innerHTML = html`
+      <div class="head"><div><h1>Cartões de crédito</h1><p>Cada compra é lançada com sua categoria. Quando a fatura é paga, todas as compras dela viram “pago” na data do pagamento.</p></div>
+        ${isFin() ? html`<div class="row"><button class="btn" id="novaf">Abrir fatura de outro mês</button><button class="btn pri" id="impf">Importar fatura</button></div>` : ''}</div>
+      <div class="tabs">${cs.map(x => html`<button data-c="${x.id}" class="${x.id === st.cartao ? 'on' : ''}">${x.nome}${aberto(x.id) ? html` <span class="small muted num">${money(aberto(x.id))}</span>` : ''}</button>`)}</div>
+      <div class="grid2" style="grid-template-columns:260px 1fr">
+        <div class="card"><div class="filters"><span class="small muted">${c.dia_fechamento ? `Fecha dia ${c.dia_fechamento} · vence dia ${c.dia_vencimento}` : html`<a href="#/cadastros">defina fechamento e vencimento</a>`}</span></div>
+          ${fats.length ? fats.map(f => html`<div class="list-item" style="padding:10px 14px;cursor:pointer;${f.id === st.fatura ? 'background:var(--brand-soft)' : ''}" data-f="${f.id}">
+            <div><b>${brMonth(f.mes_vencimento)}</b><div class="small muted">vence ${brDate(f.data_vencimento)}</div></div>
+            <div style="text-align:right"><div class="num">${money(f.total)}</div>${pillFatura(f)}</div></div>`) : html`<div class="empty">Sem faturas ainda.</div>`}
+        </div>
+        <div class="card">${fa ? html`
+          <div class="filters" style="align-items:center"><div class="grow"><h2>Fatura ${brMonth(fa.mes_vencimento)}</h2><div class="small muted">fecha ${brDate(fa.data_fechamento)} · vence ${brDate(fa.data_vencimento)} · ${fa.itens} compra(s)${fa.sem_categoria ? html` · <span class="neg">${fa.sem_categoria} sem categoria</span>` : ''}${fa.status === 'paga' ? ` · paga em ${brDate(fa.data_pagamento)} (${money(fa.valor_pago)})` : ''}${fa.conciliada ? ' · conciliada com o extrato' : ''}</div></div>
+            <div class="num" style="font-size:20px">${money(fa.total)}</div></div>
+          ${isFin() ? html`<div class="filters"><button class="btn sm" id="addc">+ Compra</button><button class="btn sm" id="anxf">Anexos${fa.qtd_anexos ? ` (${fa.qtd_anexos})` : ''}</button>
+            ${fa.status === 'paga' ? (fa.conciliada ? '' : html`<button class="btn sm" id="reab">Reabrir fatura</button>`) : html`<button class="btn sm ok" id="pagf">Registrar pagamento</button>`}
+            <span class="small muted grow" style="text-align:right">${fa.status === 'paga' ? '' : 'Ou importe o extrato da conta: o pagamento da fatura é reconhecido na conciliação.'}</span></div>` : ''}
+          ${itens.length ? html`<div class="tbl-wrap"><table><thead><tr><th>Compra</th><th>Descrição</th><th>Categoria</th><th class="r">Valor</th><th></th></tr></thead><tbody>
+            ${itens.map(l => html`<tr><td class="num">${l.data_documento ? brDate(l.data_documento) : html`<span class="small muted">recorrente</span>`}</td><td><div>${l.descricao}</div><div class="small muted">${l.fornecedor || ''}${l.centro_custo ? (l.fornecedor ? ' · ' : '') + l.centro_custo : ''}</div></td>
+              <td class="small">${l.categoria || html`<span class="neg">sem categoria</span>`}</td><td class="r num ${l.tipo === 'receber' ? 'pos' : ''}">${l.tipo === 'receber' ? '−' : ''}${money(l.valor)}</td>
+              <td class="r">${isFin() ? html`<button class="btn sm" data-ed="${l.id}">Editar</button>` : ''}</td></tr>`)}
+          </tbody></table></div>` : html`<div class="empty">Nenhuma compra nesta fatura. Importe o arquivo da fatura ou lance as compras.</div>`}` : html`<div class="empty">Escolha uma fatura.</div>`}
+        </div>
+      </div>`.s;
+    $$('[data-c]').forEach(b => b.onclick = () => { st.cartao = b.dataset.c; st.fatura = null; render(); });
+    $$('[data-f]').forEach(b => b.onclick = () => { st.fatura = b.dataset.f; render(); });
+    $$('[data-ed]').forEach(b => b.onclick = () => editarLanc(itens.find(x => x.id === b.dataset.ed).tipo, itens.find(x => x.id === b.dataset.ed), false, render));
+    $('#addc')?.addEventListener('click', () => editarLanc('pagar', { status:'aprovado', conta_id: c.id, fatura_id: fa.id, data_documento: today(), data_competencia: firstDay(monthKey()), data_vencimento: fa.data_vencimento, tags:[] }, true, render));
+    $('#anxf')?.addEventListener('click', () => modalAnexos({ faturaId: fa.id, titulo:`Anexos · fatura ${brMonth(fa.mes_vencimento)}` }).then(render));
+    $('#pagf')?.addEventListener('click', async () => {
+      const ok = await formModal({ title:`Pagar fatura ${brMonth(fa.mes_vencimento)}`, note:`Total das compras: ${money(fa.total)}. Se a fatura teve juros ou IOF, informe o valor efetivamente pago.`,
+        initial:{ data: fa.data_vencimento, conta: c.conta_pagamento_id, valor: fa.total },
+        fields:[{ key:'data', label:'Data do pagamento', type:'date', required:true }, { key:'conta', label:'Pago pela conta', type:'select', required:true, options:() => opts(contasCorrentes()) }, { key:'valor', label:'Valor pago', type:'money', required:true }],
+        saveLabel:'Registrar pagamento', onSave: d => q(sb.rpc('pagar_fatura', { p_fatura:fa.id, p_data:d.data, p_conta:d.conta, p_valor:d.valor })) });
+      if (ok) { toast('Fatura paga. As compras foram marcadas como pagas.'); render(); }
+    });
+    $('#reab')?.addEventListener('click', async () => { if (!await confirmar('Reabrir fatura', 'As compras voltam para “aprovado” e o pagamento é desfeito.')) return;
+      try { await q(sb.rpc('reabrir_fatura', { p_fatura: fa.id })); toast('Fatura reaberta.'); render(); } catch(e) { toast(errMsg(e), true); } });
+    $('#novaf')?.addEventListener('click', async () => {
+      const r = await formModal({ title:'Abrir fatura', fields:[{ key:'mes', label:'Mês de vencimento', type:'month', required:true }], initial:{ mes: firstDay(addMonths(monthKey(), 1)) }, saveLabel:'Abrir',
+        onSave: d => q(sb.rpc('obter_fatura', { p_cartao: st.cartao, p_mes: d.mes })) });
+      if (r) { st.fatura = r; render(); }
+    });
+    $('#impf')?.addEventListener('click', () => importarFatura(cs, st, render));
+  };
+  await render();
+}
+
+async function importarFatura(cs, st, depois){
+  const r = await modalImportar({ titulo:'Importar fatura do cartão', modoCartao:true, contaOpts: cs.map(c => ({ value:c.id, label:c.nome })), contaInicial: st.cartao,
+    extraCampos: html`<div class="f"><label for="imp_mes">Fatura com vencimento em</label><input id="imp_mes" type="month" value="${st.fatura ? '' : monthKey()}"></div>`.s,
+    onImport: async ({ conta, linhas, bg }) => {
+      const mes = $('#imp_mes', bg).value; if (!mes) throw new Error('Informe o mês de vencimento da fatura.');
+      const fid = await q(sb.rpc('obter_fatura', { p_cartao: conta, p_mes: firstDay(mes) }));
+      const existentes = await q(sb.from('lancamentos').select('data_documento,valor,descricao').eq('fatura_id', fid));
+      const chave = x => `${x.data_documento}|${Number(x.valor).toFixed(2)}|${semAcento(x.descricao)}`;
+      const ja = new Set(existentes.map(chave));
+      const novos = linhas.map(l => ({ l, tipo: l.valor < 0 ? 'pagar' : 'receber', data_documento: l.data, valor: Math.abs(l.valor), descricao: l.descricao })).filter(x => !ja.has(chave(x)));
+      // classificação: regra → fornecedor → histórico, em paralelo de 8 em 8
+      const cls = [];
+      for (let i = 0; i < novos.length; i += 8) cls.push(...await Promise.all(novos.slice(i, i + 8).map(x => q(sb.rpc('sugerir_classificacao', { p_texto: x.descricao, p_tipo: 'pagar' })).then(r => r[0]).catch(() => null))));
+      const rows = novos.map((x, i) => ({ tipo: x.tipo, descricao: x.descricao, valor: x.valor, data_documento: x.data_documento, data_competencia: firstDay(x.data_documento.slice(0,7)),
+        data_vencimento: x.data_documento, status:'aprovado', conta_id: conta, fatura_id: fid, forma_pagamento:'cartao_credito', origem:'importacao',
+        categoria_id: x.tipo === 'pagar' ? cls[i]?.categoria_id || null : null, centro_custo_id: cls[i]?.centro_custo_id || null, fornecedor_id: cls[i]?.fornecedor_id || null }));
+      for (let i = 0; i < rows.length; i += 300) await q(sb.from('lancamentos').insert(rows.slice(i, i + 300)));
+      return { fid, conta, novos: rows.length, rep: linhas.length - rows.length, semCat: rows.filter(r => r.tipo === 'pagar' && !r.categoria_id).length };
+    } });
+  if (r) { st.cartao = r.conta; st.fatura = r.fid; toast(`${r.novos} compra(s) importada(s)${r.rep ? `, ${r.rep} já existiam` : ''}.${r.semCat ? ` ${r.semCat} ficaram sem categoria — classifique na lista.` : ''}`); depois(); }
+}
+
+// inicia depois que tudo acima foi declarado
+if (!cfg?.url) renderConfig(); else boot();
+</script>
+</body>
+</html>
