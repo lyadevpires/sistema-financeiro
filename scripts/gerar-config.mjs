@@ -9,8 +9,14 @@ if (existsSync('.env')) {
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
   }
 }
-const url = process.env.SUPABASE_URL || '';
-const anonKey = process.env.SUPABASE_ANON_KEY || '';
+// Colar ou enviar pelo PowerShell costuma trazer BOM e quebra de linha; o navegador recusa isso no cabeçalho da requisição.
+const limpa = v => (v || '').replace(/^﻿/, '').trim();
+const url = limpa(process.env.SUPABASE_URL);
+const anonKey = limpa(process.env.SUPABASE_ANON_KEY);
+if (/[^\x21-\x7E]/.test(url + anonKey)) {
+  console.error('SUPABASE_URL ou SUPABASE_ANON_KEY tem caractere invisível ou acentuado. Cole o valor de novo, sem espaços.');
+  process.exit(1);
+}
 if (!url || !anonKey) {
   const msg = 'SUPABASE_URL e/ou SUPABASE_ANON_KEY não definidas.';
   if (process.env.VERCEL) { console.error(msg + ' Configure em Project Settings → Environment Variables.'); process.exit(1); }
